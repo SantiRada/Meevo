@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-purple: #7315E6;
+    --color-bg: #070709;
+    --color-panel: #0D0D0F;
+    --color-card: #1A1A1D;
+    --color-border: #212124;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #CCCCCC;
+    --color-text-tertiary: #777777;
+    --color-text-inverse: #070709;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+}

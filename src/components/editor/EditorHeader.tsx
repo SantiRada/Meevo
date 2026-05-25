@@ -1,0 +1,101 @@
+import React from 'react';
+import { 
+  ArrowLeft24Regular, 
+  AppsList24Regular, 
+  Board24Regular, 
+  DocumentMultiple24Regular,
+  Cube24Regular,
+  Circle24Regular,
+  TextBulletListSquare24Regular,
+  Book24Regular,
+  Play24Regular
+} from '@fluentui/react-icons';
+import type { ComponentType } from '../../pages/Editor';
+import clsx from 'clsx';
+
+interface EditorHeaderProps {
+  draftName: string;
+  onBack: () => void;
+  activeComponents: ComponentType[];
+  activeTab: string;
+  onSelectTab: (tab: string) => void;
+  autoSaveStatus: 'waiting' | 'loading' | 'saved';
+}
+
+const getIconForComponent = (comp: ComponentType) => {
+  switch (comp) {
+    case 'Board': return <Board24Regular fontSize={16} />;
+    case 'Cards': return <DocumentMultiple24Regular fontSize={16} />;
+    case 'Dices': return <Cube24Regular fontSize={16} />;
+    case 'Tokens': return <Circle24Regular fontSize={16} />;
+    case 'Rules': return <TextBulletListSquare24Regular fontSize={16} />;
+    case 'Manual': return <Book24Regular fontSize={16} />;
+  }
+};
+
+export const EditorHeader: React.FC<EditorHeaderProps> = ({ draftName, onBack, activeComponents, activeTab, onSelectTab, autoSaveStatus }) => {
+  const sortedComponents = [...activeComponents].sort();
+
+  return (
+    <header className="py-5 border-b border-[#CCCCCC]/10 grid grid-cols-3 items-center px-8 bg-meevo-bg shrink-0">
+      {/* Left Area: Back & Title */}
+      <div className="flex items-center gap-4 justify-self-start">
+        <button 
+          onClick={onBack}
+          className="text-meevo-text-secondary hover:text-meevo-text-primary transition-colors"
+        >
+          <ArrowLeft24Regular />
+        </button>
+        <div className="flex flex-col">
+          <h1 className="font-medium text-meevo-text-primary leading-tight text-lg">{draftName}</h1>
+          <span className="text-xs text-meevo-text-tertiary mt-0.5">
+            {activeComponents.length} tiles • square
+          </span>
+        </div>
+      </div>
+
+      {/* Center Area: Tabs */}
+      <div className="flex items-center gap-1 overflow-x-auto bg-[#070709] border border-[#CCCCCC]/10 rounded-lg p-1.5 justify-self-center">
+        <button 
+          onClick={() => onSelectTab('Components')}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+            activeTab === 'Components' 
+              ? 'bg-[#1A1A1D] text-meevo-text-primary' 
+              : 'text-meevo-text-secondary hover:text-meevo-text-primary hover:bg-[#1A1A1D]/50'
+          }`}
+        >
+          <AppsList24Regular fontSize={14} />
+          Components
+        </button>
+        
+        {sortedComponents.map(comp => (
+          <button 
+            key={comp}
+            onClick={() => onSelectTab(comp)}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              activeTab === comp 
+                ? 'bg-[#1A1A1D] text-meevo-text-primary' 
+                : 'text-meevo-text-secondary hover:text-meevo-text-primary hover:bg-[#1A1A1D]/50'
+            }`}
+          >
+            {getIconForComponent(comp)}
+            {comp}
+          </button>
+        ))}
+      </div>
+
+      {/* Right Area: Playtest */}
+      <div className="justify-self-end flex items-center gap-4">
+        <span className="text-[10px] uppercase font-medium tracking-wide text-meevo-text-tertiary">
+          {autoSaveStatus === 'loading' && 'Loading...'}
+          {autoSaveStatus === 'waiting' && 'Waiting...'}
+          {autoSaveStatus === 'saved' && '✔ Auto-Save'}
+        </span>
+        <button className="flex items-center gap-2 px-5 py-2 rounded-md text-sm font-medium bg-meevo-text-primary text-meevo-text-inverse hover:bg-meevo-text-secondary transition-colors">
+          <Play24Regular fontSize={16} />
+          Playtest
+        </button>
+      </div>
+    </header>
+  );
+};
