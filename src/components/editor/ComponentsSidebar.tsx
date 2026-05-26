@@ -7,6 +7,8 @@ interface ComponentsSidebarProps {
   draftName: string;
   activeComponents: ComponentType[];
   onToggleComponent: (comp: ComponentType) => void;
+  genders: string[];
+  onUpdateGenders: (genders: string[]) => void;
   onSave: () => void;
 }
 
@@ -22,13 +24,12 @@ const COMPONENT_COLORS: Record<ComponentType, string> = {
 const ALL_COMPONENTS: ComponentType[] = ['Board', 'Cards', 'Dices', 'Tokens', 'Rules', 'Manual'];
 const GENRES = ['Party', 'Deckbuilding', 'Co-op Survival', 'Strategy', 'Roleplaying', 'Abstract', 'Puzzle'];
 
-export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName, activeComponents, onToggleComponent, onSave }) => {
+export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName, activeComponents, onToggleComponent, genders, onUpdateGenders, onSave }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedGenders, setSelectedGenders] = useState<string[]>(['Party', 'Deckbuilding', 'Co-op Survival']);
 
   const toggleGender = (genre: string) => {
-    setSelectedGenders(prev => 
-      prev.includes(genre) ? prev.filter(g => g !== genre) : [...prev, genre]
+    onUpdateGenders(
+      genders.includes(genre) ? genders.filter(g => g !== genre) : [...genders, genre]
     );
   };
 
@@ -63,8 +64,8 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName,
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <div className="flex flex-wrap gap-2">
-              {selectedGenders.length === 0 && <span className="text-meevo-text-tertiary text-sm">Select genders...</span>}
-              {selectedGenders.map(g => (
+              {(!genders || genders.length === 0) && <span className="text-meevo-text-tertiary text-sm">Select genders...</span>}
+              {genders?.map(g => (
                 <span key={g} className="bg-[#070709] text-meevo-text-primary text-xs px-2 py-1 rounded-sm">
                   {g}
                 </span>
@@ -80,7 +81,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName,
                 <label key={genre} className="flex items-center gap-3 px-3 py-2 hover:bg-[#070709] cursor-pointer text-sm text-meevo-text-primary">
                   <input 
                     type="checkbox" 
-                    checked={selectedGenders.includes(genre)}
+                    checked={genders?.includes(genre) || false}
                     onChange={() => toggleGender(genre)}
                     className="accent-meevo-purple bg-[#070709] border-[#CCCCCC]/10 rounded-sm"
                   />

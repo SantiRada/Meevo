@@ -6,7 +6,19 @@ interface ColorPickerModalProps {
   onChange: (color: string) => void;
   x?: number;
   y?: number;
+  variables?: { id: string, name: string, color: string }[];
 }
+
+const cssColorToHex = (colorStr: string) => {
+  if (!colorStr) return '#000000';
+  if (colorStr.startsWith('#')) return colorStr;
+  const ctx = document.createElement('canvas').getContext('2d');
+  if (ctx) {
+    ctx.fillStyle = colorStr;
+    if (ctx.fillStyle.startsWith('#')) return ctx.fillStyle.toUpperCase();
+  }
+  return colorStr;
+};
 
 // Helper to convert HSV to Hex
 function hsvToHex(h: number, s: number, v: number) {
@@ -32,16 +44,19 @@ function hsvToHex(h: number, s: number, v: number) {
 }
 
 // Helper to convert Hex to HSV
-function hexToHsv(hex: string) {
+function hexToHsv(rawColor: string) {
+  const hex = cssColorToHex(rawColor);
   let r = 0, g = 0, b = 0;
-  if (hex.length === 4) {
-    r = parseInt(hex[1] + hex[1], 16) / 255;
-    g = parseInt(hex[2] + hex[2], 16) / 255;
-    b = parseInt(hex[3] + hex[3], 16) / 255;
-  } else if (hex.length === 7) {
-    r = parseInt(hex.substring(1, 3), 16) / 255;
-    g = parseInt(hex.substring(3, 5), 16) / 255;
-    b = parseInt(hex.substring(5, 7), 16) / 255;
+  if (hex.startsWith('#')) {
+    if (hex.length === 4) {
+      r = parseInt(hex[1] + hex[1], 16) / 255;
+      g = parseInt(hex[2] + hex[2], 16) / 255;
+      b = parseInt(hex[3] + hex[3], 16) / 255;
+    } else if (hex.length === 7) {
+      r = parseInt(hex.substring(1, 3), 16) / 255;
+      g = parseInt(hex.substring(3, 5), 16) / 255;
+      b = parseInt(hex.substring(5, 7), 16) / 255;
+    }
   }
   const max = Math.max(r, g, b), min = Math.min(r, g, b);
   let h = 0, s = 0, v = max;
@@ -59,8 +74,12 @@ function hexToHsv(hex: string) {
   return { h, s, v };
 }
 
-export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({ color, onClose, onChange, x = 0, y = 0 }) => {
-  const [hsv, setHsv] = useState(hexToHsv(color || '#FFFFFF'));
+export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({ color, onClose, onChange, x = 0, y = 0, variables }) => {
+  const [hsv, setHsv] = useState(() => hexToHsv(color || '#FFFFFF'));
+  const [pos, setPos] = useState({ 
+    x: Math.min(x, window.innerWidth - 250), 
+    y: Math.min(y, window.innerHeight - 300) 
+  });
   const svAreaRef = useRef<HTMLDivElement>(null);
   const hueSliderRef = useRef<HTMLDivElement>(null);
   
@@ -106,9 +125,27 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({ color, onClo
     window.addEventListener('pointerup', handleUp);
   };
 
+  const handleDragPointerDown = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startPos = { ...pos };
+
+    const handleMove = (ev: PointerEvent) => {
+      setPos({
+        x: startPos.x + (ev.clientX - startX),
+        y: startPos.y + (ev.clientY - startY)
+      });
+    };
+    const handleUp = () => {
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', handleUp);
+    };
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', handleUp);
+  };
+
   const currentHueHex = hsvToHex(hsv.h, 1, 1);
-  const left = Math.min(x, window.innerWidth - 250);
-  const top = Math.min(y, window.innerHeight - 300);
 
   return (
     <>
@@ -117,10 +154,17 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({ color, onClo
       
       {/* Modal */}
       <div 
-        className="fixed z-50 bg-[#1A1A1D] border border-[#333] rounded-xl shadow-2xl p-4 w-60 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-100"
-        style={{ left, top }}
+        className="fixed z-50 bg-[#1A1A1D] border border-[#333] rounded-xl shadow-2xl p-4 pt-6 w-60 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-100"
+        style={{ left: pos.x, top: pos.y }}
         onPointerDown={e => e.stopPropagation()}
       >
+        {/* Drag Handle */}
+        <div 
+          className="absolute top-0 left-0 right-0 h-6 cursor-move flex items-center justify-center hover:bg-[#2A2A2D]/50 rounded-t-xl transition-colors"
+          onPointerDown={handleDragPointerDown}
+        >
+          <div className="w-8 h-1 bg-[#333] rounded-full pointer-events-none" />
+        </div>
         {/* SV Area */}
         <div 
           ref={svAreaRef}
@@ -158,19 +202,40 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({ color, onClo
           />
         </div>
 
-        {/* Hex Input */}
+        {/* Hex/CSS Input */}
         <div className="flex gap-2">
           <div className="w-8 h-8 rounded-md shrink-0 border border-[#333]" style={{ backgroundColor: color }} />
           <div className="flex-1 flex items-center bg-[#2A2A2D] rounded-md px-2 focus-within:ring-1 focus-within:ring-meevo-purple">
-            <span className="text-meevo-text-tertiary">#</span>
             <input 
               type="text" 
-              value={color.replace('#', '')} 
-              onChange={e => onChange('#' + e.target.value)}
-              className="w-full bg-transparent text-sm text-meevo-text-primary outline-none px-1 uppercase"
+              value={color} 
+              onChange={e => {
+                let val = e.target.value;
+                if (/^[0-9A-Fa-f]{3}$/.test(val) || /^[0-9A-Fa-f]{6}$/.test(val)) {
+                  val = '#' + val;
+                }
+                onChange(val);
+              }}
+              className="w-full bg-transparent text-sm text-meevo-text-primary outline-none px-1"
+              placeholder="#HEX or Color"
             />
           </div>
         </div>
+
+        {/* Variables */}
+        {variables && variables.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-2 border-t border-[#333]">
+            {variables.map(v => (
+              <button
+                key={v.id}
+                title={v.name}
+                className="w-6 h-6 rounded-md border border-[#333] hover:scale-110 transition-transform"
+                style={{ backgroundColor: v.color }}
+                onClick={() => onChange(v.color)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

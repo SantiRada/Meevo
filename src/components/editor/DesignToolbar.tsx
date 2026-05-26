@@ -13,10 +13,11 @@ export type DesignTool = 'Cursor' | 'Shape' | 'Image' | 'Text' | 'Pencil' | 'Bru
 interface DesignToolbarProps {
   activeTool: DesignTool;
   onChangeTool: (tool: DesignTool) => void;
+  allowedTools?: DesignTool[];
 }
 
-export const DesignToolbar: React.FC<DesignToolbarProps> = ({ activeTool, onChangeTool }) => {
-  const tools: { id: DesignTool; icon: JSX.Element; shortcut: string }[] = [
+export const DesignToolbar: React.FC<DesignToolbarProps> = ({ activeTool, onChangeTool, allowedTools }) => {
+  let tools: { id: DesignTool; icon: JSX.Element; shortcut: string }[] = [
     { id: 'Cursor', icon: <Cursor20Regular />, shortcut: 'V' },
     { id: 'Shape', icon: <Square20Regular />, shortcut: 'R' },
     { id: 'Image', icon: <Image20Regular />, shortcut: 'I' },
@@ -24,6 +25,10 @@ export const DesignToolbar: React.FC<DesignToolbarProps> = ({ activeTool, onChan
     { id: 'Pencil', icon: <Pen20Regular />, shortcut: 'P' },
     { id: 'Brush', icon: <DrawShape20Regular />, shortcut: 'B' },
   ];
+
+  if (allowedTools) {
+    tools = tools.filter(t => allowedTools.includes(t.id));
+  }
 
   return (
     <div className="absolute bottom-6 right-6 flex items-center bg-[#1A1A1D] border border-[#333] rounded-lg p-1 shadow-2xl z-20">

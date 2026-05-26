@@ -7,7 +7,26 @@ interface BoardSidebarProps {
   onSave: (config: BoardConfig) => void;
 }
 
-const PATH_SHAPES: BoardConfig['pathShape'][] = ['Square', 'Circle', 'Pentagon', 'Hexagon', 'Snake'];
+const PATH_SHAPES: BoardConfig['pathShape'][] = ['Square', 'Circle', 'Pentagon', 'Hexagon', 'Snake', 'Grid', 'Spiral', 'Free Paths'];
+
+const SpiralIcon = ({ dir }: { dir: string }) => {
+  let rot = 0, scaleX = 1, scaleY = 1;
+  switch (dir) {
+    case 'U_R': rot = 0; scaleX = 1; scaleY = 1; break;
+    case 'U_L': rot = 0; scaleX = -1; scaleY = 1; break;
+    case 'D_R': rot = 0; scaleX = 1; scaleY = -1; break;
+    case 'D_L': rot = 0; scaleX = -1; scaleY = -1; break;
+    case 'R_D': rot = 90; scaleX = 1; scaleY = 1; break;
+    case 'L_U': rot = -90; scaleX = 1; scaleY = 1; break;
+    case 'L_D': rot = -90; scaleX = -1; scaleY = 1; break;
+    case 'R_U': rot = 90; scaleX = -1; scaleY = 1; break;
+  }
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ transform: `rotate(${rot}deg) scaleX(${scaleX}) scaleY(${scaleY})` }}>
+      <path d="M8 18V12C8 9.79086 9.79086 8 12 8H18M18 8L14 4M18 8L14 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+};
 
 export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSave }) => {
   const [boardType, setBoardType] = useState<BoardConfig['type']>(initialConfig?.type || 'Fixed Path');
@@ -17,6 +36,12 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
   const [tileWidth, setTileWidth] = useState<number>(initialConfig?.tileWidth || 60);
   const [tileHeight, setTileHeight] = useState<number>(initialConfig?.tileHeight || 60);
   const [gap, setGap] = useState<number>(initialConfig?.gap || 10);
+  const [gridColumns, setGridColumns] = useState<number>(initialConfig?.gridColumns || 8);
+  const [gridRows, setGridRows] = useState<number>(initialConfig?.gridRows || 8);
+  const [gapLine, setGapLine] = useState<number>(initialConfig?.gapLine || 1);
+  const [spiralDirection, setSpiralDirection] = useState<'U_L' | 'U_R' | 'D_L' | 'D_R' | 'L_D' | 'L_U' | 'R_D' | 'R_U'>(initialConfig?.spiralDirection || 'U_R');
+  const [spiralRounded, setSpiralRounded] = useState<boolean>(initialConfig?.spiralRounded || false);
+  const [connectEnd, setConnectEnd] = useState<boolean>(initialConfig?.connectEnd || false);
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -50,7 +75,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
   }
 
   const handleSave = () => {
-    onSave({ type: boardType, pathShape, tileCount, tileWidth, tileHeight, gap });
+    onSave({ type: boardType, pathShape, tileCount, tileWidth, tileHeight, gap, gridColumns, gridRows, gapLine, spiralDirection, spiralRounded, connectEnd });
   };
 
   return (
@@ -127,24 +152,51 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
           )}
         </div>
 
-        {/* TILE COUNT */}
-        <div className="mb-6">
-          <label className="block text-xs font-medium text-meevo-text-secondary mb-2 tracking-wider uppercase">
-            Tile Count
-          </label>
-          <input 
-            type="number" 
-            value={tileCount}
-            onChange={(e) => setTileCount(parseInt(e.target.value) || 0)}
-            placeholder="20, 30, 40..."
-            className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors mb-2"
-          />
-          {showWarning && (
-            <div className="bg-[#2A2100] border border-[#403100] rounded-md p-2 text-xs text-[#F0B100] leading-snug">
-              With {tileCount} tiles, the {pathShape} will have uneven sides. Use a multiple of {sides} for perfect symmetry.
+        {/* TILE COUNT or GRID DIMENSIONS */}
+        {pathShape === 'Grid' ? (
+          <div className="mb-6 flex gap-3">
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-meevo-text-secondary mb-2 tracking-wider uppercase">
+                Columns
+              </label>
+              <input 
+                type="number" 
+                value={gridColumns}
+                onChange={(e) => setGridColumns(Math.max(1, parseInt(e.target.value) || 1))}
+                className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+              />
             </div>
-          )}
-        </div>
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-meevo-text-secondary mb-2 tracking-wider uppercase">
+                Rows
+              </label>
+              <input 
+                type="number" 
+                value={gridRows}
+                onChange={(e) => setGridRows(Math.max(1, parseInt(e.target.value) || 1))}
+                className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="mb-6">
+            <label className="block text-xs font-medium text-meevo-text-secondary mb-2 tracking-wider uppercase">
+              Tile Count
+            </label>
+            <input 
+              type="number" 
+              value={tileCount}
+              onChange={(e) => setTileCount(parseInt(e.target.value) || 0)}
+              placeholder="20, 30, 40..."
+              className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors mb-2"
+            />
+            {showWarning && (
+              <div className="bg-[#2A2100] border border-[#403100] rounded-md p-2 text-xs text-[#F0B100] leading-snug">
+                With {tileCount} tiles, the {pathShape} will have uneven sides. Use a multiple of {sides} for perfect symmetry.
+              </div>
+            )}
+          </div>
+        )}
 
         {/* WIDTH & HEIGHT */}
         <div className="mb-6 flex gap-3">
@@ -182,17 +234,129 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
         )}
 
         {/* GAP */}
-        <div className="mb-6">
-          <label className="block text-xs font-medium text-meevo-text-secondary mb-2 tracking-wider uppercase">
-            Gap
-          </label>
-          <input 
-            type="number" 
-            value={gap}
-            onChange={(e) => setGap(parseInt(e.target.value) || 0)}
-            className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
-          />
-        </div>
+        {pathShape === 'Spiral' ? (
+          <>
+            <div className="mb-6 flex gap-3">
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-meevo-text-secondary mb-2 tracking-wider uppercase">
+                  Gap
+                </label>
+                <input 
+                  type="number" 
+                  value={gap}
+                  onChange={(e) => setGap(parseInt(e.target.value) || 0)}
+                  className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-meevo-text-secondary mb-2 tracking-wider uppercase">
+                  Between Lines
+                </label>
+                <input 
+                  type="number" 
+                  value={gapLine}
+                  min={1}
+                  onChange={(e) => setGapLine(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+                />
+              </div>
+            </div>
+            
+            {/* SPIRAL DIRECTION */}
+            <div className="mb-6">
+              <label className="block text-xs font-medium text-meevo-text-secondary mb-2 tracking-wider uppercase">
+                Spiral Direction
+              </label>
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                  {(['U_L', 'U_R', 'D_L', 'D_R'] as const).map(dir => (
+                    <button
+                      key={dir}
+                      onClick={() => setSpiralDirection(dir)}
+                      className={`flex-1 flex justify-center items-center h-12 rounded-md border transition-colors ${
+                        spiralDirection === dir 
+                          ? 'bg-[#141E17] border-[#5BB661] text-meevo-text-primary' 
+                          : 'bg-[#1A1A1D] border-[#CCCCCC]/10 text-meevo-text-tertiary hover:border-meevo-purple'
+                      }`}
+                    >
+                      <SpiralIcon dir={dir} />
+                    </button>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  {(['L_D', 'L_U', 'R_D', 'R_U'] as const).map(dir => (
+                    <button
+                      key={dir}
+                      onClick={() => setSpiralDirection(dir)}
+                      className={`flex-1 flex justify-center items-center h-12 rounded-md border transition-colors ${
+                        spiralDirection === dir 
+                          ? 'bg-[#141E17] border-[#5BB661] text-meevo-text-primary' 
+                          : 'bg-[#1A1A1D] border-[#CCCCCC]/10 text-meevo-text-tertiary hover:border-meevo-purple'
+                      }`}
+                    >
+                      <SpiralIcon dir={dir} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* SPIRAL ROUNDED TOGGLE */}
+            <div className="mb-6 flex items-center justify-between">
+              <label className="text-xs font-medium text-meevo-text-secondary tracking-wider uppercase">
+                Rounded Curves
+              </label>
+              <button
+                onClick={() => setSpiralRounded(!spiralRounded)}
+                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+                  spiralRounded ? 'bg-meevo-purple' : 'bg-[#1A1A1D] border border-[#CCCCCC]/10'
+                }`}
+              >
+                <span
+                  className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                    spiralRounded ? 'translate-x-4' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            {pathShape !== 'Free Paths' && (
+              <div className="mb-6">
+                <label className="block text-xs font-medium text-meevo-text-secondary mb-2 tracking-wider uppercase">
+                  Gap
+                </label>
+                <input 
+                  type="number" 
+                  value={gap}
+                  onChange={(e) => setGap(parseInt(e.target.value) || 0)}
+                  className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+                />
+              </div>
+            )}
+            
+            {pathShape === 'Snake' && (
+              <div className="mb-6 flex items-center justify-between">
+                <label className="text-xs font-medium text-meevo-text-secondary tracking-wider uppercase">
+                  Connect end
+                </label>
+                <button
+                  onClick={() => setConnectEnd(!connectEnd)}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+                    connectEnd ? 'bg-meevo-purple' : 'bg-[#1A1A1D] border border-[#CCCCCC]/10'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      connectEnd ? 'translate-x-4' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+            )}
+          </>
+        )}
 
       </div>
 

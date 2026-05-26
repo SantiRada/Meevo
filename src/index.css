@@ -22,6 +22,54 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Hide number input arrows */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  /* Range Slider */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(to right, var(--color-purple) var(--slider-val, 0%), #333 var(--slider-val, 0%));
+    height: 4px;
+    border-radius: 2px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -4px;
+    background: var(--color-purple);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #212124;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-purple);
+  }
 }
 
 @layer utilities {

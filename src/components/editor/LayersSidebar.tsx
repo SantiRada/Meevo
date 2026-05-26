@@ -7,15 +7,23 @@ import {
   Square20Regular,
   ChevronDown20Regular,
   ChevronRight20Regular,
-  Star20Regular // for Convert to Component
+  Star20Regular, // for Convert to Component
+  Link20Regular,
+  Dismiss20Regular
 } from '@fluentui/react-icons';
+
+import { CreateComponentModal } from './CreateComponentModal';
+import { ConnectComponentModal } from './ConnectComponentModal';
+import { useNotification } from '../../contexts/NotificationContext';
 
 interface LayersSidebarProps {
   selectedTileIds: number[];
   boardTilesData: Record<number, BoardTileData>;
   onUpdateTile: (tileId: number, data: Partial<BoardTileData>) => void;
   selectedLayerIds: string[];
-  onSelectLayer: (layerIds: string[]) => void;
+  onSelectLayer: (layerIds: string[], multi?: boolean) => void;
+  boardTileComponents?: import('../../services/storage/types').BoardTileComponent[];
+  onUpdateComponents?: (newComponents: import('../../services/storage/types').BoardTileComponent[], newTilesData?: Record<number, BoardTileData>) => void;
 }
 
 const getLayerIcon = (type: LayerData['type']) => {
@@ -32,10 +40,15 @@ export const LayersSidebar: React.FC<LayersSidebarProps> = ({
   boardTilesData,
   onUpdateTile,
   selectedLayerIds,
-  onSelectLayer
+  onSelectLayer,
+  boardTileComponents = [],
+  onUpdateComponents
 }) => {
+  const { addNotification } = useNotification();
   const [editingLayerId, setEditingLayerId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showConnectModal, setShowConnectModal] = useState(false);
   if (selectedTileIds.length !== 1) {
     return (
       <div className="flex flex-col h-full bg-meevo-panel p-6">
@@ -99,6 +112,127 @@ export const LayersSidebar: React.FC<LayersSidebarProps> = ({
     }
   };
 
+  const handleCreateComponent = (name: string) => {
+    const newComp = {
+      id: 'comp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+      name,
+      layers: tileData.layers || [],
+      rounded: tileData.rounded,
+      roundedTL: tileData.roundedTL,
+      roundedTR: tileData.roundedTR,
+      roundedBL: tileData.roundedBL,
+      roundedBR: tileData.roundedBR,
+      fillColor: tileData.fillColor,
+      strokeColor: tileData.strokeColor,
+      strokeWidth: tileData.strokeWidth,
+      strokeOpacity: tileData.strokeOpacity,
+      bindings: tileData.bindings
+    };
+    const newComponents = [...boardTileComponents, newComp];
+    const newTilesData = { ...boardTilesData, [primaryTileId]: { ...tileData, componentId: newComp.id } };
+    onUpdateComponents?.(newComponents, newTilesData);
+    setShowCreateModal(false);
+  };
+
+  const handleConnectComponent = (compId: string) => {
+    const comp = boardTileComponents.find(c => c.id === compId);
+    if (!comp) return;
+
+    const newLayers = [...(tileData.layers || []), ...comp.layers];
+    onUpdateTile(primaryTileId, {
+      componentId: comp.id,
+      layers: newLayers,
+      rounded: comp.rounded,
+      roundedTL: comp.roundedTL,
+      roundedTR: comp.roundedTR,
+      roundedBL: comp.roundedBL,
+      roundedBR: comp.roundedBR,
+      fillColor: comp.fillColor,
+      strokeColor: comp.strokeColor,
+      strokeWidth: comp.strokeWidth,
+      strokeOpacity: comp.strokeOpacity,
+      bindings: comp.bindings
+    });
+    setShowConnectModal(false);
+  };
+
+  const handleUpdateComponent = () => {
+    if (!tileData.componentId) return;
+    const oldComp = boardTileComponents.find(c => c.id === tileData.componentId);
+    if (!oldComp) return;
+
+    const newCompData = {
+      layers: tileData.layers || [],
+      rounded: tileData.rounded,
+      roundedTL: tileData.roundedTL,
+      roundedTR: tileData.roundedTR,
+      roundedBL: tileData.roundedBL,
+      roundedBR: tileData.roundedBR,
+      fillColor: tileData.fillColor,
+      strokeColor: tileData.strokeColor,
+      strokeWidth: tileData.strokeWidth,
+      strokeOpacity: tileData.strokeOpacity,
+      bindings: tileData.bindings
+    };
+
+    const newComponents = boardTileComponents.map(c => 
+      c.id === tileData.componentId ? { ...c, ...newCompData } : c
+    );
+    
+    const newTilesData = { ...boardTilesData };
+    const oldLayerIds = oldComp.layers.map(l => l.id);
+
+    Object.keys(newTilesData).forEach(idStr => {
+      const tId = Number(idStr);
+      const t = newTilesData[tId];
+      if (t.componentId === tileData.componentId && t.id !== primaryTileId) {
+        // Remove old component layers
+        const filteredLayers = (t.layers || []).filter(l => !oldLayerIds.includes(l.id));
+        // Append new component layers
+        const updatedLayers = [...filteredLayers, ...newCompData.layers];
+        
+        newTilesData[tId] = {
+          ...t,
+          ...newCompData,
+          layers: updatedLayers
+        };
+      }
+    });
+
+    onUpdateComponents?.(newComponents, newTilesData);
+    addNotification({
+      type: 'success',
+      layout: 'simple',
+      title: 'Component updated on all tiles'
+    });
+  };
+
+  const handleDisconnectComponent = () => {
+    if (!tileData.componentId) return;
+    const comp = boardTileComponents.find(c => c.id === tileData.componentId);
+    if (!comp) {
+      onUpdateTile(primaryTileId, { componentId: undefined });
+      return;
+    }
+
+    const compLayerIds = comp.layers.map(l => l.id);
+    const newLayers = (tileData.layers || []).filter(l => !compLayerIds.includes(l.id));
+
+    const resetBase = {
+      componentId: undefined,
+      layers: newLayers,
+    };
+    
+    // Check if component should be deleted (no other tiles connected)
+    const otherConnected = Object.values(boardTilesData).some(t => t.id !== primaryTileId && t.componentId === comp.id);
+    if (!otherConnected) {
+      const newComponents = boardTileComponents.filter(c => c.id !== comp.id);
+      onUpdateComponents?.(newComponents, { ...boardTilesData, [primaryTileId]: { ...tileData, ...resetBase } });
+    } else {
+      onUpdateTile(primaryTileId, resetBase);
+    }
+  };
+
   return (
     <div className="flex flex-col h-full bg-meevo-panel">
       <div className="p-6 pb-2 shrink-0">
@@ -107,8 +241,10 @@ export const LayersSidebar: React.FC<LayersSidebarProps> = ({
 
       <div className="flex-1 overflow-y-auto px-4 py-2">
         {/* Tile Root */}
-        <div className="flex items-center gap-2 px-2 py-1.5 mb-2">
-          <ChevronDown20Regular fontSize={12} className="text-meevo-text-tertiary" />
+        <div 
+          className={`flex items-center gap-2 px-2 py-1.5 mb-2 cursor-pointer rounded-md transition-colors ${selectedLayerIds.length === 0 ? 'bg-[#1A1A1D] border border-[#333]' : 'hover:bg-[#1A1A1D]/50 border border-transparent'}`}
+          onClick={() => onSelectLayer([])}
+        >
           <Folder20Regular fontSize={14} className="text-meevo-text-primary" />
           <span className="text-sm font-medium text-meevo-text-primary">
             Casilla-{primaryTileId.toString().padStart(2, '0')}
@@ -155,13 +291,59 @@ export const LayersSidebar: React.FC<LayersSidebarProps> = ({
         </div>
       </div>
 
-      {/* Convert to Component Placeholder */}
-      <div className="p-4 shrink-0 border-t border-[#CCCCCC]/10">
-        <button className="w-full flex items-center justify-center gap-2 bg-[#1A1A1D] hover:bg-[#2A2A2D] text-meevo-text-primary py-2 rounded-md transition-colors text-sm font-medium border border-[#333]">
-          <Star20Regular fontSize={16} />
-          Convert to Component
-        </button>
+      {/* Convert to Component Buttons */}
+      <div className="p-4 shrink-0 border-t border-[#CCCCCC]/10 space-y-2">
+        {tileData.componentId ? (
+          <>
+            <button 
+              onClick={handleUpdateComponent}
+              className="w-full flex items-center justify-center gap-2 bg-[#1A1A1D] hover:bg-[#2A2A2D] text-meevo-purple py-2 rounded-md transition-colors text-sm font-medium border border-meevo-purple/50"
+            >
+              <Star20Regular fontSize={16} />
+              Update Component
+            </button>
+            <button 
+              onClick={handleDisconnectComponent}
+              className="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-red-500/10 text-red-400 py-2 rounded-md transition-colors text-sm font-medium border border-red-500/20"
+            >
+              <Dismiss20Regular fontSize={16} />
+              Disconnect Component
+            </button>
+          </>
+        ) : (
+          <>
+            <button 
+              onClick={() => setShowCreateModal(true)}
+              className="w-full flex items-center justify-center gap-2 bg-[#1A1A1D] hover:bg-[#2A2A2D] text-meevo-text-primary py-2 rounded-md transition-colors text-sm font-medium border border-[#333]"
+            >
+              <Star20Regular fontSize={16} />
+              Convert to Component
+            </button>
+            <button 
+              onClick={() => setShowConnectModal(true)}
+              className="w-full flex items-center justify-center gap-2 bg-[#1A1A1D] hover:bg-[#2A2A2D] text-meevo-text-primary py-2 rounded-md transition-colors text-sm font-medium border border-[#333]"
+            >
+              <Link20Regular fontSize={16} />
+              Connect Component
+            </button>
+          </>
+        )}
       </div>
+
+      {showCreateModal && (
+        <CreateComponentModal
+          onClose={() => setShowCreateModal(false)}
+          onCreate={handleCreateComponent}
+        />
+      )}
+      
+      {showConnectModal && (
+        <ConnectComponentModal
+          components={boardTileComponents}
+          onClose={() => setShowConnectModal(false)}
+          onConnect={handleConnectComponent}
+        />
+      )}
     </div>
   );
 };

@@ -11,6 +11,9 @@ interface TilesSidebarProps {
   onCreateGroup: () => void;
   onUngroup: () => void;
   isGroupSelected: boolean;
+  onDeleteVariable: (variableId: string) => void;
+  activeVariableId: string | null;
+  setActiveVariableId: (id: string | null) => void;
 }
 
 export const TilesSidebar: React.FC<TilesSidebarProps> = ({
@@ -20,11 +23,15 @@ export const TilesSidebar: React.FC<TilesSidebarProps> = ({
   onPaintSelected,
   onCreateGroup,
   onUngroup,
-  isGroupSelected
+  isGroupSelected,
+  onDeleteVariable,
+  activeVariableId,
+  setActiveVariableId
 }) => {
   const [newVarName, setNewVarName] = useState('');
-  const [activeVariableId, setActiveVariableId] = useState<string | null>(null);
   const [pickingColorId, setPickingColorId] = useState<string | null>(null);
+  const [editingVarId, setEditingVarId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState('');
 
   const colors = ['#0055FF', '#FF2222', '#22CC22', '#FFCC00', '#AA22FF', '#00CCFF'];
   
@@ -65,7 +72,7 @@ export const TilesSidebar: React.FC<TilesSidebarProps> = ({
       if (e.key.toLowerCase() === 'p') {
         e.preventDefault();
         if (!activeVariableId) {
-          addNotification({ type: 'error', title: 'Select a variable first', layout: 'simple' });
+          addNotification({ type: 'error', title: 'Select a Type Tile first', layout: 'simple' });
         } else if (selectedTileIds.length > 0) {
           onPaintSelected(activeVariableId);
         }
@@ -81,7 +88,7 @@ export const TilesSidebar: React.FC<TilesSidebarProps> = ({
         <label className="block text-xs font-bold text-meevo-text-secondary tracking-wider mb-2 uppercase">Name</label>
         <input 
           type="text" 
-          placeholder="Variable Name"
+          placeholder="Type Tile Name"
           value={newVarName}
           onChange={(e) => setNewVarName(e.target.value)}
           onKeyDown={(e) => {
@@ -94,19 +101,21 @@ export const TilesSidebar: React.FC<TilesSidebarProps> = ({
           className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-200 text-black py-2 rounded-md transition-colors text-sm font-bold"
         >
           <Add20Regular />
-          Create Variable
+          Create Type Tile
         </button>
       </div>
 
       <div className="mb-8 flex-1 overflow-y-auto pr-2">
-        <label className="block text-xs font-bold text-meevo-text-secondary tracking-wider mb-4 uppercase">Variables</label>
+        <label className="block text-xs font-bold text-meevo-text-secondary tracking-wider mb-4 uppercase">Type Tiles</label>
         <div className="space-y-1">
           {variables.map(v => (
-            <div key={v.id} className="flex flex-col gap-1">
+            <div key={v.id} className="flex flex-col gap-1 group">
               <div 
                 onClick={() => {
-                  setActiveVariableId(v.id);
-                  if (pickingColorId === v.id) setPickingColorId(null);
+                  if (editingVarId !== v.id) {
+                    setActiveVariableId(v.id);
+                    if (pickingColorId === v.id) setPickingColorId(null);
+                  }
                 }}
                 className={`flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer transition-colors ${
                   activeVariableId === v.id ? 'bg-[#1A1A1D] border border-meevo-purple' : 'hover:bg-[#1A1A1D] border border-transparent'
@@ -117,10 +126,63 @@ export const TilesSidebar: React.FC<TilesSidebarProps> = ({
                   style={{ backgroundColor: v.color }} 
                   onClick={(e) => { 
                     e.stopPropagation(); 
-                    setPickingColorId(pickingColorId === v.id ? null : v.id); 
+                    if (editingVarId !== v.id) {
+                      setPickingColorId(pickingColorId === v.id ? null : v.id); 
+                    }
                   }}
                 />
-                <span className="text-sm text-meevo-text-primary flex-1 truncate">{v.name}</span>
+                
+                {editingVarId === v.id ? (
+                  <input
+                    autoFocus
+                    type="text"
+                    value={editingName}
+                    onChange={(e) => setEditingName(e.target.value)}
+                    onBlur={() => {
+                      if (editingName.trim()) {
+                        setVariables(variables.map(vari => vari.id === v.id ? { ...vari, name: editingName.trim() } : vari));
+                      }
+                      setEditingVarId(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        if (editingName.trim()) {
+                          setVariables(variables.map(vari => vari.id === v.id ? { ...vari, name: editingName.trim() } : vari));
+                        }
+                        setEditingVarId(null);
+                      }
+                    }}
+                    className="flex-1 bg-transparent text-sm text-meevo-text-primary outline-none border-b border-meevo-purple"
+                  />
+                ) : (
+                  <>
+                    <span className="text-sm text-meevo-text-primary flex-1 truncate">{v.name}</span>
+                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingVarId(v.id);
+                          setEditingName(v.name);
+                        }}
+                        className="text-meevo-text-secondary hover:text-meevo-text-primary"
+                        title="Rename"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (activeVariableId === v.id) setActiveVariableId(null);
+                          onDeleteVariable(v.id);
+                        }}
+                        className="text-meevo-text-secondary hover:text-red-500"
+                        title="Delete"
+                      >
+                        <Dismiss20Regular />
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
               
               {pickingColorId === v.id && (
