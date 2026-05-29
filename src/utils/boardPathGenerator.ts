@@ -1,4 +1,4 @@
-import type { BoardConfig, BoardTileData } from '../../services/storage/types';
+import type { BoardConfig, BoardTileData } from '../services/storage/types';
 
 export interface TileNode {
   id: number;
@@ -76,9 +76,9 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
     }
 
     for (let i = 0; i < tileCount; i++) {
-      let p = points[i];
-      let p_prev = i > 0 ? points[i-1] : (config.connectEnd && tileCount > 1 ? points[tileCount - 1] : null);
-      let p_next = i < tileCount - 1 ? points[i+1] : (config.connectEnd && tileCount > 1 ? points[0] : null);
+      const p = points[i];
+      const p_prev = i > 0 ? points[i-1] : (config.connectEnd && tileCount > 1 ? points[tileCount - 1] : null);
+      const p_next = i < tileCount - 1 ? points[i+1] : (config.connectEnd && tileCount > 1 ? points[0] : null);
       
       let v_in = { dx: 1, dy: 0 };
       let v_out = { dx: 1, dy: 0 };
@@ -94,15 +94,15 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
       if (!p_next && p_prev) v_out = v_in;
       if (!p_prev && !p_next) { v_in = { dx: 1, dy: 0 }; v_out = { dx: 1, dy: 0 }; }
       
-      let mag_in = Math.sqrt(v_in.dx * v_in.dx + v_in.dy * v_in.dy) || 1;
-      let mag_out = Math.sqrt(v_out.dx * v_out.dx + v_out.dy * v_out.dy) || 1;
+      const mag_in = Math.sqrt(v_in.dx * v_in.dx + v_in.dy * v_in.dy) || 1;
+      const mag_out = Math.sqrt(v_out.dx * v_out.dx + v_out.dy * v_out.dy) || 1;
       
-      let t_in = { x: v_in.dx / mag_in, y: v_in.dy / mag_in };
-      let t_out = { x: v_out.dx / mag_out, y: v_out.dy / mag_out };
+      const t_in = { x: v_in.dx / mag_in, y: v_in.dy / mag_in };
+      const t_out = { x: v_out.dx / mag_out, y: v_out.dy / mag_out };
       
-      let dot = t_in.x * t_out.x + t_in.y * t_out.y;
-      let angle = Math.acos(Math.max(-1, Math.min(1, dot))) * 180 / Math.PI;
-      let isSharpTurn = angle >= 80 && angle <= 100;
+      const dot = t_in.x * t_out.x + t_in.y * t_out.y;
+      const angle = Math.acos(Math.max(-1, Math.min(1, dot))) * 180 / Math.PI;
+      const isSharpTurn = angle >= 80 && angle <= 100;
       
       let roundedVal = boardTilesData?.[i]?.rounded ?? 6;
       let maxR = Math.min(tileWidth / 2, tileHeight / 2) - 1;
@@ -135,17 +135,17 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
            pt3 = p_next || { x: p.x + t_in.x * stepX, y: p.y + t_in.y * stepX };
         }
         
-        let x1 = pt1.x, y1 = pt1.y;
-        let x2 = pt2.x, y2 = pt2.y;
-        let x3 = pt3.x, y3 = pt3.y;
+        const x1 = pt1.x, y1 = pt1.y;
+        const x2 = pt2.x, y2 = pt2.y;
+        const x3 = pt3.x, y3 = pt3.y;
         
-        let D = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
-        let isCollinear = Math.abs(D) < 1e-3;
+        const D = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
+        const isCollinear = Math.abs(D) < 1e-3;
         
-        let outerPts = [];
-        let innerPts = [];
-        let num_samples = 15;
-        let half_len = (tileWidth - 2 * roundedVal) / 2;
+        const outerPts = [];
+        const innerPts = [];
+        const num_samples = 15;
+        const half_len = tileWidth / 2;
         
         let rot = 0;
         let cRot = 0;
@@ -153,7 +153,7 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
         let Ux = 0, Uy = 0, R = 1, theta_p = 0;
         
         if (!isCollinear) {
-          let cross = (x2 - x1)*(y3 - y2) - (y2 - y1)*(x3 - x2);
+          const cross = (x2 - x1)*(y3 - y2) - (y2 - y1)*(x3 - x2);
           dir = cross > 0 ? 1 : -1;
           Ux = ((x1*x1 + y1*y1)*(y2 - y3) + (x2*x2 + y2*y2)*(y3 - y1) + (x3*x3 + y3*y3)*(y1 - y2)) / D;
           Uy = ((x1*x1 + y1*y1)*(x3 - x2) + (x2*x2 + y2*y2)*(x1 - x3) + (x3*x3 + y3*y3)*(x2 - x1)) / D;
@@ -165,34 +165,34 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
         }
         cRot = rot;
         
-        let h2 = (tileHeight - 2 * roundedVal) / 2;
-        let cos = Math.cos(-cRot);
-        let sin = Math.sin(-cRot);
+        const h2 = tileHeight / 2;
+        const cos = Math.cos(-cRot);
+        const sin = Math.sin(-cRot);
         
         for (let j = 0; j <= num_samples; j++) {
-          let t = -1 + 2 * (j / num_samples);
-          let s = t * half_len;
+          const t = -1 + 2 * (j / num_samples);
+          const s = t * half_len;
           
           let outX = 0, outY = 0, inX = 0, inY = 0;
           
           if (isCollinear) {
-            let dirX = Math.cos(rot);
-            let dirY = Math.sin(rot);
-            let nx = -dirY;
-            let ny = dirX;
+            const dirX = Math.cos(rot);
+            const dirY = Math.sin(rot);
+            const nx = -dirY;
+            const ny = dirX;
             outX = s * dirX - nx * h2;
             outY = s * dirY - ny * h2;
             inX = s * dirX + nx * h2;
             inY = s * dirY + ny * h2;
           } else {
-            let thetaS = theta_p + s / R * dir;
-            let px = Ux + R * Math.cos(thetaS);
-            let py = Uy + R * Math.sin(thetaS);
+            const thetaS = theta_p + s / R * dir;
+            const px = Ux + R * Math.cos(thetaS);
+            const py = Uy + R * Math.sin(thetaS);
             
-            let dx = -dir * Math.sin(thetaS);
-            let dy = dir * Math.cos(thetaS);
-            let nx = -dy;
-            let ny = dx;
+            const dx = -dir * Math.sin(thetaS);
+            const dy = dir * Math.cos(thetaS);
+            const nx = -dy;
+            const ny = dx;
             
             outX = px - nx * h2 - p.x;
             outY = py - ny * h2 - p.y;
@@ -237,7 +237,7 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
     const conns = config.freeConnections || [];
     
     for (let i = 0; i < tileCount; i++) {
-      let p = points[i];
+      const p = points[i];
       const tileConns = conns.filter(c => c.from === i || c.to === i);
       
       let roundedVal = boardTilesData?.[i]?.rounded ?? 6;
@@ -254,11 +254,11 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
           rotation: 0,
         });
       } else {
-        let conn1 = tileConns[0];
-        let conn2 = tileConns[1]; 
+        const conn1 = tileConns[0];
+        const conn2 = tileConns[1]; 
 
-        let neighbor1Id = conn1.from === i ? conn1.to : conn1.from;
-        let neighbor2Id = conn2 ? (conn2.from === i ? conn2.to : conn2.from) : undefined;
+        const neighbor1Id = conn1.from === i ? conn1.to : conn1.from;
+        const neighbor2Id = conn2 ? (conn2.from === i ? conn2.to : conn2.from) : undefined;
         
         let p_prev: {x: number, y: number} | null = null;
         let p_next: {x: number, y: number} | null = null;
@@ -288,15 +288,15 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
         if (!p_next && p_prev) v_out = v_in;
         if (!p_prev && !p_next) { v_in = { dx: 1, dy: 0 }; v_out = { dx: 1, dy: 0 }; }
         
-        let mag_in = Math.sqrt(v_in.dx * v_in.dx + v_in.dy * v_in.dy) || 1;
-        let mag_out = Math.sqrt(v_out.dx * v_out.dx + v_out.dy * v_out.dy) || 1;
+        const mag_in = Math.sqrt(v_in.dx * v_in.dx + v_in.dy * v_in.dy) || 1;
+        const mag_out = Math.sqrt(v_out.dx * v_out.dx + v_out.dy * v_out.dy) || 1;
         
-        let t_in = { x: v_in.dx / mag_in, y: v_in.dy / mag_in };
-        let t_out = { x: v_out.dx / mag_out, y: v_out.dy / mag_out };
+        const t_in = { x: v_in.dx / mag_in, y: v_in.dy / mag_in };
+        const t_out = { x: v_out.dx / mag_out, y: v_out.dy / mag_out };
         
-        let dot = t_in.x * t_out.x + t_in.y * t_out.y;
-        let angle = Math.acos(Math.max(-1, Math.min(1, dot))) * 180 / Math.PI;
-        let isSharpTurn = angle >= 80 && angle <= 100;
+        const dot = t_in.x * t_out.x + t_in.y * t_out.y;
+        const angle = Math.acos(Math.max(-1, Math.min(1, dot))) * 180 / Math.PI;
+        const isSharpTurn = angle >= 80 && angle <= 100;
         
         if (isSharpTurn) {
           tiles.push({
@@ -307,22 +307,22 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
           });
         } else {
           let pt1, pt2, pt3;
-          let stepX = tileWidth + gap; 
+          const stepX = tileWidth + gap; 
           pt1 = p_prev || { x: p.x - t_out.x * stepX, y: p.y - t_out.y * stepX };
           pt2 = p;
           pt3 = p_next || { x: p.x + t_in.x * stepX, y: p.y + t_in.y * stepX };
           
-          let x1 = pt1.x, y1 = pt1.y;
-          let x2 = pt2.x, y2 = pt2.y;
-          let x3 = pt3.x, y3 = pt3.y;
+          const x1 = pt1.x, y1 = pt1.y;
+          const x2 = pt2.x, y2 = pt2.y;
+          const x3 = pt3.x, y3 = pt3.y;
           
-          let D = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
-          let isCollinear = Math.abs(D) < 1e-3;
+          const D = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
+          const isCollinear = Math.abs(D) < 1e-3;
           
-          let outerPts = [];
-          let innerPts = [];
-          let num_samples = 15;
-          let half_len = (tileWidth - 2 * roundedVal) / 2;
+          const outerPts = [];
+          const innerPts = [];
+          const num_samples = 15;
+          const half_len = tileWidth / 2;
           
           let rot = 0;
           let cRot = 0;
@@ -330,7 +330,7 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
           let Ux = 0, Uy = 0, R = 1, theta_p = 0;
           
           if (!isCollinear) {
-            let cross = (x2 - x1)*(y3 - y2) - (y2 - y1)*(x3 - x2);
+            const cross = (x2 - x1)*(y3 - y2) - (y2 - y1)*(x3 - x2);
             dir = cross > 0 ? 1 : -1;
             Ux = ((x1*x1 + y1*y1)*(y2 - y3) + (x2*x2 + y2*y2)*(y3 - y1) + (x3*x3 + y3*y3)*(y1 - y2)) / D;
             Uy = ((x1*x1 + y1*y1)*(x3 - x2) + (x2*x2 + y2*y2)*(x1 - x3) + (x3*x3 + y3*y3)*(x2 - x1)) / D;
@@ -342,34 +342,34 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
           }
           cRot = rot;
           
-          let h2 = (tileHeight - 2 * roundedVal) / 2;
-          let cos = Math.cos(-cRot);
-          let sin = Math.sin(-cRot);
+          const h2 = tileHeight / 2;
+          const cos = Math.cos(-cRot);
+          const sin = Math.sin(-cRot);
           
           for (let j = 0; j <= num_samples; j++) {
-            let t = -1 + 2 * (j / num_samples);
-            let s = t * half_len;
+            const t = -1 + 2 * (j / num_samples);
+            const s = t * half_len;
             
             let outX = 0, outY = 0, inX = 0, inY = 0;
             
             if (isCollinear) {
-              let dirX = Math.cos(rot);
-              let dirY = Math.sin(rot);
-              let nx = -dirY;
-              let ny = dirX;
+              const dirX = Math.cos(rot);
+              const dirY = Math.sin(rot);
+              const nx = -dirY;
+              const ny = dirX;
               outX = s * dirX - nx * h2;
               outY = s * dirY - ny * h2;
               inX = s * dirX + nx * h2;
               inY = s * dirY + ny * h2;
             } else {
-              let thetaS = theta_p + s / R * dir;
-              let px = Ux + R * Math.cos(thetaS);
-              let py = Uy + R * Math.sin(thetaS);
+              const thetaS = theta_p + s / R * dir;
+              const px = Ux + R * Math.cos(thetaS);
+              const py = Uy + R * Math.sin(thetaS);
               
-              let dx = -dir * Math.sin(thetaS);
-              let dy = dir * Math.cos(thetaS);
-              let nx = -dy;
-              let ny = dx;
+              const dx = -dir * Math.sin(thetaS);
+              const dy = dir * Math.cos(thetaS);
+              const nx = -dy;
+              const ny = dx;
               
               outX = px - nx * h2 - p.x;
               outY = py - ny * h2 - p.y;
@@ -423,14 +423,14 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
       const walkArc = (th_start: number, dist: number, dir: 1 | -1) => {
         let walked = 0;
         let th = th_start;
-        let step = 0.05 * dir;
+        const step = 0.05 * dir;
         // prevent infinite loop in edge cases
         let iters = 0;
         while (walked < dist && iters < 1000) {
-          let r_curr = a + b * th;
-          let d_arc = Math.sqrt(b*b + r_curr*r_curr) * Math.abs(step);
+          const r_curr = a + b * th;
+          const d_arc = Math.sqrt(b*b + r_curr*r_curr) * Math.abs(step);
           if (walked + d_arc > dist) {
-            let rem = dist - walked;
+            const rem = dist - walked;
             th += dir * (rem / Math.sqrt(b*b + r_curr*r_curr));
             break;
           }
@@ -442,23 +442,23 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
       };
 
       let firstRoundedVal = boardTilesData?.[0]?.rounded ?? 6;
-      let maxRFirst = Math.max(0, Math.min(tileWidth / 2, tileHeight / 2) - 1);
+      const maxRFirst = Math.max(0, Math.min(tileWidth / 2, tileHeight / 2) - 1);
       if (firstRoundedVal > maxRFirst) firstRoundedVal = maxRFirst;
-      let first_half_len = (tileWidth - 2 * firstRoundedVal) / 2;
+      const first_half_len = tileWidth / 2;
       
       let theta = walkArc(0, first_half_len * 0.5, 1);
       
       for (let i = 0; i < tileCount; i++) {
-        let r = a + b * theta;
-        let x = r * Math.cos(theta);
+        const r = a + b * theta;
+        const x = r * Math.cos(theta);
         let y = r * Math.sin(theta);
         if (isCCW) y = -y;
         
-        let dx = b * Math.cos(theta) - r * Math.sin(theta);
+        const dx = b * Math.cos(theta) - r * Math.sin(theta);
         let dy = b * Math.sin(theta) + r * Math.cos(theta);
         if (isCCW) dy = -dy;
         
-        let cRot = Math.atan2(dy, dx);
+        const cRot = Math.atan2(dy, dx);
         
         let roundedVal = boardTilesData?.[i]?.rounded ?? 6;
         let maxR = Math.min(tileWidth / 2, tileHeight / 2) - 1; // 1px safety margin
@@ -466,29 +466,29 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
         if (roundedVal > maxR) roundedVal = maxR;
         if (roundedVal < 0) roundedVal = 0;
 
-        let half_len = (tileWidth - 2 * roundedVal) / 2;
+        const half_len = tileWidth / 2;
         let theta_start = walkArc(theta, half_len, -1);
         if (theta_start < 0) theta_start = 0; // Prevent self-intersection at the origin
-        let theta_end = walkArc(theta, half_len, 1);
+        const theta_end = walkArc(theta, half_len, 1);
         
         const getPoint = (th: number) => {
-          let rr = a + b * th;
-          let px = rr * Math.cos(th);
+          const rr = a + b * th;
+          const px = rr * Math.cos(th);
           let py = rr * Math.sin(th);
           if (isCCW) py = -py;
-          let pdx = b * Math.cos(th) - rr * Math.sin(th);
+          const pdx = b * Math.cos(th) - rr * Math.sin(th);
           let pdy = b * Math.sin(th) + rr * Math.cos(th);
           if (isCCW) pdy = -pdy;
           return { x: px, y: py, dx: pdx, dy: pdy };
         };
         
         const getCorners = (pt: ReturnType<typeof getPoint>) => {
-          let mag = Math.sqrt(pt.dx*pt.dx + pt.dy*pt.dy);
-          let tx = pt.dx / mag;
-          let ty = pt.dy / mag;
-          let nx = -ty;
-          let ny = tx;
-          let h2 = (tileHeight - 2 * roundedVal) / 2;
+          const mag = Math.sqrt(pt.dx*pt.dx + pt.dy*pt.dy);
+          const tx = pt.dx / mag;
+          const ty = pt.dy / mag;
+          const nx = -ty;
+          const ny = tx;
+          const h2 = tileHeight / 2;
           return {
             outer: { x: pt.x - nx * h2, y: pt.y - ny * h2 },
             inner: { x: pt.x + nx * h2, y: pt.y + ny * h2 }
@@ -496,32 +496,32 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
         };
         
         const toLocal = (p: {x: number, y: number}) => {
-          let lx = p.x - x;
-          let ly = p.y - y;
-          let cos = Math.cos(-cRot);
-          let sin = Math.sin(-cRot);
+          const lx = p.x - x;
+          const ly = p.y - y;
+          const cos = Math.cos(-cRot);
+          const sin = Math.sin(-cRot);
           return {
             x: lx * cos - ly * sin,
             y: lx * sin + ly * cos
           };
         };
         
-        let d_theta_span = theta_end - theta_start;
-        let num_samples = Math.max(2, Math.ceil(d_theta_span / 0.15)); // sample roughly every 8-9 degrees
+        const d_theta_span = theta_end - theta_start;
+        const num_samples = Math.max(2, Math.ceil(d_theta_span / 0.15)); // sample roughly every 8-9 degrees
         
-        let outerPts = [];
-        let innerPts = [];
+        const outerPts = [];
+        const innerPts = [];
         
         for (let j = 0; j <= num_samples; j++) {
-          let th = theta_start + (j / num_samples) * d_theta_span;
-          let pt = getPoint(th);
-          let corners = getCorners(pt);
+          const th = theta_start + (j / num_samples) * d_theta_span;
+          const pt = getPoint(th);
+          const corners = getCorners(pt);
           outerPts.push(toLocal(corners.outer));
           innerPts.push(toLocal(corners.inner));
         }
         
         innerPts.reverse();
-        let cornerPolygon = [...outerPts, ...innerPts];
+        const cornerPolygon = [...outerPts, ...innerPts];
         
         genTiles.push({
           id: i,
@@ -559,7 +559,7 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
         const steps = multiplier * rings;
 
         for (let s = 0; s < steps && placed < tileCount; s++) {
-          let currentStep = (s === 0 && segmentsCompleted > 0) ? (stepMax - shiftAmount) : stepMax;
+          const currentStep = (s === 0 && segmentsCompleted > 0) ? (stepMax - shiftAmount) : stepMax;
           cx += d.dx * currentStep;
           cy += d.dy * currentStep;
           genTiles.push({ 
@@ -584,14 +584,14 @@ export function generateBoardPath(config: BoardConfig, boardTilesData?: Record<n
       else if (dir.startsWith('L_')) targetVec = { dx: 1, dy: 0 };
       else if (dir.startsWith('R_')) targetVec = { dx: -1, dy: 0 };
       
-      let angleOffset = Math.atan2(targetVec.dy, targetVec.dx) - Math.atan2(lastDy, lastDx);
+      const angleOffset = Math.atan2(targetVec.dy, targetVec.dx) - Math.atan2(lastDy, lastDx);
       
-      let cosT = isRounded ? Math.cos(angleOffset) : Math.round(Math.cos(angleOffset));
-      let sinT = isRounded ? Math.sin(angleOffset) : Math.round(Math.sin(angleOffset));
+      const cosT = isRounded ? Math.cos(angleOffset) : Math.round(Math.cos(angleOffset));
+      const sinT = isRounded ? Math.sin(angleOffset) : Math.round(Math.sin(angleOffset));
       
       genTiles.forEach(t => {
-        let nx = t.x * cosT - t.y * sinT;
-        let ny = t.x * sinT + t.y * cosT;
+        const nx = t.x * cosT - t.y * sinT;
+        const ny = t.x * sinT + t.y * cosT;
         t.x = nx;
         t.y = ny;
         t.rotation = (t.rotation + (angleOffset * 180) / Math.PI) % 360;

@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import type { BoardConfig, LayerData } from '../../services/storage/types';
 import { ChevronDown20Regular, Folder20Regular, Image20Regular, Square20Regular, TextFont20Regular } from '@fluentui/react-icons';
 import { ColorPickerModal } from '../ui/ColorPickerModal';
+import { SegmentedSlider } from '../ui/SegmentedSlider';
 
 interface TableSidebarProps {
   initialConfig?: BoardConfig;
-  onSave: (config: BoardConfig) => void;
+  onSave: (config: BoardConfig, silent?: boolean) => void;
   selectedLayerIds?: string[];
   onSelectLayer?: (id: string, multi: boolean) => void;
 }
@@ -14,9 +15,10 @@ const TABLE_SHAPES: NonNullable<BoardConfig['tableConfig']>['shape'][] = ['Squar
 
 export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSave, selectedLayerIds = [], onSelectLayer }) => {
   const [shape, setShape] = useState<NonNullable<BoardConfig['tableConfig']>['shape']>(initialConfig?.tableConfig?.shape || 'Rectangle');
-  const [width, setWidth] = useState<number>(initialConfig?.tableConfig?.width || 800);
-  const [height, setHeight] = useState<number>(initialConfig?.tableConfig?.height || 600);
+  const [width, setWidth] = useState<number>(initialConfig?.tableConfig?.width || 1920);
+  const [height, setHeight] = useState<number>(initialConfig?.tableConfig?.height || 1080);
   const [color, setColor] = useState<string>(initialConfig?.tableConfig?.color || '#141E17');
+  const [borderRadius, setBorderRadius] = useState<number>(initialConfig?.tableConfig?.borderRadius ?? 16);
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
@@ -25,11 +27,26 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
   const [editingLayerId, setEditingLayerId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
 
+
+  const handleDelete = () => {
+    onSave({
+      ...(initialConfig || {
+        type: 'Fixed Path',
+        tileCount: 0,
+        pathShape: 'Square',
+        tileWidth: 60,
+        tileHeight: 60,
+        gap: 10
+      }),
+      tableConfig: undefined
+    } as BoardConfig, false);
+  };
+
   const handleSave = () => {
     onSave({
       ...(initialConfig || {
         type: 'Fixed Path',
-        tileCount: 40,
+        tileCount: 0,
         pathShape: 'Square',
         tileWidth: 60,
         tileHeight: 60,
@@ -40,11 +57,12 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
         width,
         height,
         color,
+        borderRadius,
         x: initialConfig?.tableConfig?.x || 0,
         y: initialConfig?.tableConfig?.y || 0,
         layers: initialConfig?.tableConfig?.layers
       }
-    });
+    }, true);
   };
 
   const saveLayers = (newLayers: LayerData[]) => {
@@ -55,7 +73,7 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
         ...initialConfig.tableConfig!,
         layers: newLayers
       }
-    });
+    }, true);
   };
 
   const getLayerIcon = (type: string) => {
@@ -110,7 +128,7 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
 
   return (
     <>
-      <div className="py-4 px-6 border-b border-[#CCCCCC]/10 shrink-0">
+      <div className="h-[56px] px-6 border-b border-meevo-border flex items-center shrink-0">
         <h2 className="text-base font-medium text-meevo-text-primary">Table</h2>
       </div>
 
@@ -120,7 +138,7 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
             Shape
           </label>
           <div 
-            className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 min-h-[38px] flex items-center justify-between cursor-pointer focus-within:ring-1 focus-within:ring-meevo-purple"
+            className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 min-h-[38px] flex items-center justify-between cursor-pointer focus-within:ring-1 focus-within:ring-meevo-purple"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <span className="text-sm text-meevo-text-primary">{shape}</span>
@@ -128,7 +146,7 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
           </div>
 
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 w-full mt-1 bg-[#1A1A1D] border border-[#CCCCCC]/10 rounded-sm shadow-xl z-20 py-2">
+            <div className="absolute top-full left-0 w-full mt-1 bg-meevo-surface-2 border border-meevo-border rounded-sm shadow-xl z-20 py-2">
               {TABLE_SHAPES.map(s => (
                 <button 
                   key={s}
@@ -136,7 +154,7 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
                     setShape(s);
                     setIsDropdownOpen(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-sm text-meevo-text-primary hover:bg-[#070709] transition-colors"
+                  className="w-full text-left px-4 py-2 text-sm text-meevo-text-primary hover:bg-meevo-surface-2 transition-colors"
                 >
                   {s}
                 </button>
@@ -154,7 +172,7 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
               type="number"
               value={width}
               onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
-              className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary focus:outline-none focus:ring-1 focus:ring-meevo-purple"
+              className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary focus:outline-none focus:ring-1 focus:ring-meevo-purple"
             />
           </div>
           <div>
@@ -165,7 +183,7 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
               type="number"
               value={height}
               onChange={(e) => setHeight(parseInt(e.target.value) || 0)}
-              className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary focus:outline-none focus:ring-1 focus:ring-meevo-purple"
+              className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary focus:outline-none focus:ring-1 focus:ring-meevo-purple"
             />
           </div>
         </div>
@@ -174,7 +192,7 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
           <label className="block text-xs font-medium text-meevo-text-secondary mb-2 tracking-wider uppercase">
             Color
           </label>
-          <div className="flex items-center space-x-3 bg-[#1A1A1D] rounded-md p-2">
+          <div className="flex items-center space-x-3 bg-meevo-surface-2 rounded-md p-2">
             <div 
               className="w-8 h-8 rounded border border-[#CCCCCC]/20 cursor-pointer"
               style={{ backgroundColor: color }}
@@ -192,64 +210,46 @@ export const TableSidebar: React.FC<TableSidebarProps> = ({ initialConfig, onSav
           )}
         </div>
 
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-xs font-medium text-meevo-text-secondary tracking-wider uppercase">
+                Rounding
+              </label>
+              <div className="flex items-center">
+                <input 
+                  type="number" 
+                  min="0"
+                  value={borderRadius}
+                  onChange={(e) => setBorderRadius(Math.max(0, parseInt(e.target.value) || 0))}
+                  className="w-12 bg-transparent text-right text-xs font-mono text-meevo-text-primary focus:outline-none"
+                />
+                <span className="text-xs font-mono text-meevo-text-primary">px</span>
+              </div>
+            </div>
+            <SegmentedSlider 
+              options={[0, 8, 16, 24, 32]}
+              value={borderRadius}
+              onChange={(val) => setBorderRadius(val as number)}
+            />
+          </div>
+        </div>
+
+      <div className="p-4 border-t border-meevo-border shrink-0 flex flex-col gap-3">
         <button 
           onClick={handleSave}
-          className="w-full bg-meevo-purple text-white py-2 rounded-md font-medium mt-4 mb-6 hover:bg-opacity-90 transition-colors"
+          className="w-full py-2 bg-meevo-purple text-white text-sm font-medium rounded-md hover:bg-meevo-purple-active transition-colors flex items-center justify-center gap-2"
         >
           Save Table
         </button>
-
-        <hr className="border-[#CCCCCC]/10 mb-6" />
-
-        <div className="mb-4">
-          <h2 className="text-xs font-bold text-meevo-text-secondary tracking-wider uppercase mb-4">Layers</h2>
-          
-          <div 
-            className={`flex items-center gap-2 px-2 py-1.5 mb-2 cursor-pointer rounded-md transition-colors ${selectedLayerIds.length === 0 ? 'bg-[#1A1A1D] border border-[#333]' : 'hover:bg-[#1A1A1D]/50 border border-transparent'}`}
-            onClick={() => onSelectLayer?.('', false)}
+        
+        {initialConfig?.tableConfig && (
+          <button 
+            onClick={handleDelete}
+            className="w-full bg-[rgba(0,0,0,0.05)] border border-red-500/30 text-red-500 py-2 rounded-md text-sm font-medium hover:bg-red-500/10 transition-colors"
           >
-            <Folder20Regular fontSize={14} className="text-meevo-text-primary" />
-            <span className="text-sm font-medium text-meevo-text-primary">Table Elements</span>
-          </div>
-
-          <div className="flex flex-col space-y-[2px]">
-            {layers.map((layer, index) => (
-              <div 
-                key={layer.id}
-                draggable
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, index)}
-                onClick={(e) => handleSelectLayer(e, layer.id)}
-                onDoubleClick={(e) => handleDoubleClick(e, layer)}
-                className={`flex items-center gap-3 px-3 py-1.5 ml-4 rounded-md cursor-pointer transition-colors ${
-                  selectedLayerIds.includes(layer.id) ? 'bg-[#1A1A1D] border border-[#333]' : 'hover:bg-[#1A1A1D]/50 border border-transparent'
-                }`}
-              >
-                <div className="shrink-0">{getLayerIcon(layer.type)}</div>
-                
-                {editingLayerId === layer.id ? (
-                  <input 
-                    type="text" 
-                    value={editValue}
-                    autoFocus
-                    onChange={(e) => setEditValue(e.target.value)}
-                    onBlur={() => commitRename(layer.id)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') commitRename(layer.id); }}
-                    className="bg-transparent text-sm text-meevo-text-primary outline-none w-full"
-                  />
-                ) : (
-                  <span className="text-sm text-meevo-text-primary truncate select-none">{layer.name}</span>
-                )}
-              </div>
-            ))}
-            {layers.length === 0 && (
-              <div className="text-xs text-meevo-text-tertiary px-6 py-2">
-                No layers yet.
-              </div>
-            )}
-          </div>
-        </div>
+            Delete Table
+          </button>
+        )}
       </div>
     </>
   );

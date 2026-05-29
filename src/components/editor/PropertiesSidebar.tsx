@@ -40,19 +40,19 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({ variable, 
   };
 
   return (
-    <div className="flex flex-col h-full bg-meevo-bg border-l border-[#CCCCCC]/10 w-[300px]">
-      <div className="py-4 px-6 border-b border-[#CCCCCC]/10 shrink-0 flex items-center justify-between">
+    <div className="flex flex-col h-full bg-meevo-surface-2 border-l border-meevo-border w-[300px]">
+      <div className="h-[56px] px-6 border-b border-meevo-border shrink-0 flex items-center justify-between">
         <h2 className="text-base font-medium text-meevo-text-primary">Properties</h2>
         <button 
           onClick={openNewModal}
-          className="w-8 h-8 flex items-center justify-center rounded-md border border-[#333333] hover:bg-[#1A1A1D] text-meevo-text-primary transition-colors"
+          className="w-8 h-8 flex items-center justify-center rounded-md border border-[#333333] hover:bg-meevo-surface-2 text-meevo-text-primary transition-colors"
         >
           <Add20Regular />
         </button>
       </div>
 
       <div className="px-6 py-6 flex-1 overflow-y-auto">
-        <div className="flex items-center gap-3 bg-[#131F15] rounded-md px-4 py-3 mb-6">
+        <div className="flex items-center gap-3 bg-meevo-selector-green rounded-md px-4 py-3 mb-6">
           <div 
             className="w-4 h-4 rounded-md shrink-0" 
             style={{ backgroundColor: variable.color }}
@@ -69,7 +69,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({ variable, 
               <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button 
                   onClick={() => openEditModal(prop)}
-                  className="text-meevo-text-secondary hover:text-white transition-colors"
+                  className="text-meevo-text-secondary hover:text-meevo-text-primary transition-colors"
                 >
                   <Edit20Regular fontSize={14} />
                 </button>
@@ -83,7 +83,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({ variable, 
             </div>
             {prop.type === 'List' ? (
               <div className="relative">
-                <select className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 min-h-[38px] text-sm text-meevo-text-primary outline-none border border-transparent appearance-none">
+                <select className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 min-h-[38px] text-sm text-meevo-text-primary outline-none border border-transparent appearance-none">
                   {prop.listOptions?.map((opt, i) => (
                     <option key={i} value={opt}>{opt}</option>
                   ))}
@@ -93,7 +93,7 @@ export const PropertiesSidebar: React.FC<PropertiesSidebarProps> = ({ variable, 
                 </div>
               </div>
             ) : (
-              <div className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 min-h-[38px] flex items-center border border-transparent">
+              <div className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 min-h-[38px] flex items-center border border-transparent">
                 {prop.type === 'Number' && prop.prefix && (
                   <span className="text-sm text-meevo-text-secondary mr-2">{prop.prefix}</span>
                 )}

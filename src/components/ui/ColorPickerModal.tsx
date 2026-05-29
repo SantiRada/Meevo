@@ -150,11 +150,11 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({ color, onClo
   return (
     <>
       {/* Overlay to close */}
-      <div className="fixed inset-0 z-40" onPointerDown={onClose} />
+      <div className="fixed inset-0 z-[1000]" onPointerDown={onClose} />
       
       {/* Modal */}
       <div 
-        className="fixed z-50 bg-[#1A1A1D] border border-[#333] rounded-xl shadow-2xl p-4 pt-6 w-60 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-100"
+        className="fixed z-[1001] bg-meevo-surface-2 border border-meevo-border rounded-xl shadow-2xl p-4 pt-6 w-60 flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-100"
         style={{ left: pos.x, top: pos.y }}
         onPointerDown={e => e.stopPropagation()}
       >
@@ -163,7 +163,7 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({ color, onClo
           className="absolute top-0 left-0 right-0 h-6 cursor-move flex items-center justify-center hover:bg-[#2A2A2D]/50 rounded-t-xl transition-colors"
           onPointerDown={handleDragPointerDown}
         >
-          <div className="w-8 h-1 bg-[#333] rounded-full pointer-events-none" />
+          <div className="w-8 h-1 bg-meevo-surface-4 bg-meevo-surface-4 rounded-full pointer-events-none" />
         </div>
         {/* SV Area */}
         <div 
@@ -204,8 +204,8 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({ color, onClo
 
         {/* Hex/CSS Input */}
         <div className="flex gap-2">
-          <div className="w-8 h-8 rounded-md shrink-0 border border-[#333]" style={{ backgroundColor: color }} />
-          <div className="flex-1 flex items-center bg-[#2A2A2D] rounded-md px-2 focus-within:ring-1 focus-within:ring-meevo-purple">
+          <div className="w-8 h-8 rounded-md shrink-0 border border-meevo-border" style={{ backgroundColor: color }} />
+          <div className="flex-1 flex items-center bg-meevo-surface-0 border border-meevo-border rounded-md px-2 focus-within:ring-1 focus-within:ring-meevo-purple">
             <input 
               type="text" 
               value={color} 
@@ -224,12 +224,12 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({ color, onClo
 
         {/* Variables */}
         {variables && variables.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-2 border-t border-[#333]">
+          <div className="flex flex-wrap gap-2 pt-2 border-t border-meevo-border">
             {variables.map(v => (
               <button
                 key={v.id}
                 title={v.name}
-                className="w-6 h-6 rounded-md border border-[#333] hover:scale-110 transition-transform"
+                className="w-6 h-6 rounded-md border border-meevo-border hover:scale-110 transition-transform"
                 style={{ backgroundColor: v.color }}
                 onClick={() => onChange(v.color)}
               />

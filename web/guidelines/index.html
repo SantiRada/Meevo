@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meevo-App Design Guidelines</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/nico-moji" rel="stylesheet">
+    <!-- Fluent Icons CDN -->
+    <link rel="stylesheet" href="https://res.cdn.office.net/files/fabric-cdn-prod_20230815.002/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- <script src="app.js"></script> -->
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1 class="logo-font">MEEVO GUIDELINES</h1>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <span class="nav-section-title">Foundation</span>
+                <a href="#colors" class="nav-link active" data-target="colors">Colors</a>
+                <a href="#typography" class="nav-link" data-target="typography">Typography</a>
+                <a href="#icons" class="nav-link" data-target="icons">Iconography</a>
+                <a href="#radius" class="nav-link" data-target="radius">Border Radius</a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Structure</span>
+                <a href="#spacing" class="nav-link" data-target="spacing">Spacing System</a>
+                <a href="#layout" class="nav-link" data-target="layout">Layout & Grid</a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Components</span>
+                <a href="#buttons" class="nav-link" data-target="buttons">Buttons</a>
+                <a href="#inputs" class="nav-link" data-target="inputs">Inputs & Sliders</a>
+                <a href="#modals" class="nav-link" data-target="modals">Modals & Pop-ups</a>
+                <a href="#menus" class="nav-link" data-target="menus">Dropdowns & Context Menus</a>
+                <a href="#advanced-components" class="nav-link" data-target="advanced-components">Toolbars & Pickers</a>
+                <a href="#bars" class="nav-link" data-target="bars">Bars</a>
+                <a href="#sidebars" class="nav-link" data-target="sidebars">Sidebars</a>
+                <a href="#design-sidebar" class="nav-link" data-target="design-sidebar">Design Sidebar</a>
+                <a href="#cursors" class="nav-link" data-target="cursors">Cursors</a>
+            </div>
+            <div class="nav-section">
+                <span class="nav-section-title">Concepts</span>
+                <a href="#design-phase" class="nav-link" data-target="design-phase">Design Phase</a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="ms-Icon ms-Icon--Lightbulb" aria-hidden="true"></i>
+                <span id="theme-label">Switch to Light Mode</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="content">
+        <!-- COLORS -->
+        <section id="colors" class="section active">
+            <h1 class="section-title">Colors</h1>
+            <p class="section-desc">Meevo-App heavily relies on a multi-layered surface elevation model. Rather than strict shades of grey, we use a calculated progression from Surface-0 to Surface-6 to simulate depth and interactivity.</p>
+            
+            <h2>Brand & Core</h2>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-purple)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Meevo Purple</div>
+                        <div class="color-var">--color-purple</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-purple-active)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Meevo Purple Active</div>
+                        <div class="color-var">--color-purple-active</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Surfaces & Elevation</h2>
+            <p style="color: var(--color-text-secondary); margin-bottom: 24px; font-size: 0.9rem;">Elevations control visual hierarchy. Surface-0 is the lowest layer (canvas), and higher numbers rise towards the user.</p>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-surface-0)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface 0 (Canvas)</div>
+                        <div class="color-var">--color-surface-0</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-surface-1)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface 1 (Panels)</div>
+                        <div class="color-var">--color-surface-1</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-surface-2)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface 2 (Cards)</div>
+                        <div class="color-var">--color-surface-2</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-surface-3)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface 3 (Interactive)</div>
+                        <div class="color-var">--color-surface-3</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-surface-4)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface 4 (Hover)</div>
+                        <div class="color-var">--color-surface-4</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-surface-5)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface 5 (Active)</div>
+                        <div class="color-var">--color-surface-5</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Text & Borders</h2>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-text-primary)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Text Primary</div>
+                        <div class="color-var">--color-text-primary</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-text-secondary)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Text Secondary</div>
+                        <div class="color-var">--color-text-secondary</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: var(--color-border)"></div>
+                    <div class="color-info">
+                        <div class="color-name">Border</div>
+                        <div class="color-var">--color-border</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TYPOGRAPHY -->
+        <section id="typography" class="section">
+            <h1 class="section-title">Typography</h1>
+            <p class="section-desc">We use two distinct typefaces. <strong>Readex Pro</strong> for all functional UI and data display, and <strong>Nico Moji</strong> exclusively for the logo and brand headings.</p>
+            
+            <div class="typo-showcase">
+                <div class="typo-label">Primary UI Font - Readex Pro</div>
+                <div style="font-family: var(--font-base); font-size: 2.5rem; font-weight: 700; margin-bottom: 8px;">Aa Bb Cc</div>
+                <div style="font-family: var(--font-base); font-size: 1rem; color: var(--color-text-secondary);">The quick brown fox jumps over the lazy dog. 1234567890</div>
+            </div>
+
+            <div class="typo-showcase">
+                <div class="typo-label">Brand Font - Nico Moji</div>
+                <div style="font-family: var(--font-logo); font-size: 2.5rem; font-weight: 400; margin-bottom: 8px; color: var(--color-purple);">MEEVO</div>
+                <div style="font-family: var(--font-logo); font-size: 1rem; color: var(--color-text-secondary);">The quick brown fox jumps over the lazy dog. 1234567890</div>
+            </div>
+
+            <h2>Hierarchy</h2>
+            <div class="card-showcase">
+                <div style="font-size: 2rem; font-weight: 700; margin-bottom: 16px;">Heading 1 - 32px</div>
+                <div style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;">Heading 2 - 24px</div>
+                <div style="font-size: 1.125rem; font-weight: 500; margin-bottom: 16px;">Heading 3 - 18px</div>
+                <div style="font-size: 1rem; font-weight: 400; margin-bottom: 16px;">Body Regular - 16px</div>
+                <div style="font-size: 0.875rem; font-weight: 400; margin-bottom: 16px; color: var(--color-text-secondary);">Body Small - 14px</div>
+                <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-tertiary);">Label / Caption - 12px</div>
+            </div>
+        </section>
+
+        <!-- ICONS -->
+        <section id="icons" class="section">
+            <h1 class="section-title">Iconography</h1>
+            <p class="section-desc">Meevo-App utilizes <strong>Microsoft Fluent Icons</strong>. These icons offer a friendly yet professional geometric aesthetic that perfectly compliments Readex Pro.</p>
+            
+            <h2>Design Directives</h2>
+            <ul style="color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 32px;">
+                <li><strong>Weight:</strong> Icons should use the 'Regular' weight for standard UI elements.</li>
+                <li><strong>Sizing:</strong> Standard sizes are 16px, 20px, and 24px.</li>
+                <li><strong>Color:</strong> Icons inherit text color context. They should generally be <code>--color-text-secondary</code> and transition to <code>--color-text-primary</code> on hover/active.</li>
+                <li><strong>Spacing:</strong> Always maintain at least 8px gap between an icon and its text label in buttons and lists.</li>
+            </ul>
+
+            <h2>Common UI Icons (Fluent)</h2>
+            <div class="icon-grid">
+                <div class="icon-box"><i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i><span>Settings</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--Add" aria-hidden="true"></i><span>Add</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--EditSolid12" aria-hidden="true"></i><span>Edit</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--Delete" aria-hidden="true"></i><span>Delete</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--ChevronDown" aria-hidden="true"></i><span>Chevron</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--Search" aria-hidden="true"></i><span>Search</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--Save" aria-hidden="true"></i><span>Save</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--Undo" aria-hidden="true"></i><span>Undo</span></div>
+            </div>
+        </section>
+
+        <!-- BORDER RADIUS -->
+        <section id="radius" class="section">
+            <h1 class="section-title">Border Radius</h1>
+            <p class="section-desc">Rounding creates a softer, more modern interface. We use a standardized scale for rounding corners depending on the size of the element.</p>
+            
+            <div class="flex-gap" style="gap: 32px; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <div class="radius-box" style="border-radius: var(--radius-sm)">sm</div>
+                    <div style="margin-top: 8px; font-size: 0.875rem; color: var(--color-text-secondary);">4px (Inputs, tags)</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="radius-box" style="border-radius: var(--radius-md)">md</div>
+                    <div style="margin-top: 8px; font-size: 0.875rem; color: var(--color-text-secondary);">8px (Buttons, small cards)</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="radius-box" style="border-radius: var(--radius-lg)">lg</div>
+                    <div style="margin-top: 8px; font-size: 0.875rem; color: var(--color-text-secondary);">12px (Standard cards)</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="radius-box" style="border-radius: var(--radius-xl)">xl</div>
+                    <div style="margin-top: 8px; font-size: 0.875rem; color: var(--color-text-secondary);">16px (Modals)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LAYOUT -->
+        <section id="layout" class="section">
+            <h1 class="section-title">Layout & Grid</h1>
+            <p class="section-desc">Meevo-App's layout is structured to maximize canvas space while keeping controls accessible in organized panels.</p>
+            
+            <h2>Spatial System</h2>
+            <p style="color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 24px;">
+                We use an 8pt grid system. All margins, paddings, and heights should be multiples of 8 (e.g., 8px, 16px, 24px, 32px, 48px). For micro-adjustments, 4px is allowed.
+            </p>
+            <div class="card-showcase" style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <div class="icon-box"><i class="ms-Icon ms-Icon--Add" aria-hidden="true"></i><span>Add</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--Cancel" aria-hidden="true"></i><span>Close</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--CheckMark" aria-hidden="true"></i><span>Check</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i><span>Settings</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--EditSolid12" aria-hidden="true"></i><span>Edit</span></div>
+                <div class="icon-box"><i class="ms-Icon ms-Icon--Delete" aria-hidden="true"></i><span>Delete</span></div>
+            </div>
+            <div class="card-showcase" style="display: flex; gap: 16px;">
+                <div style="background: var(--color-purple); width: 8px; height: 32px; border-radius: 4px;"></div>
+                <div style="background: var(--color-purple); width: 16px; height: 32px; border-radius: 4px;"></div>
+                <div style="background: var(--color-purple); width: 24px; height: 32px; border-radius: 4px;"></div>
+                <div style="background: var(--color-purple); width: 32px; height: 32px; border-radius: 4px;"></div>
+            </div>
+
+            <h2>Application Layout</h2>
+            <div style="border: 1px solid var(--color-border); height: 300px; display: flex; border-radius: var(--radius-lg); overflow: hidden;">
+                <!-- Sidebar representation -->
+                <div style="width: 200px; background: var(--color-surface-1); border-right: 1px solid var(--color-border); padding: 16px;">
+                    <div style="height: 16px; background: var(--color-surface-3); border-radius: 4px; margin-bottom: 16px;"></div>
+                    <div style="height: 12px; background: var(--color-surface-2); border-radius: 4px; margin-bottom: 8px;"></div>
+                    <div style="height: 12px; background: var(--color-surface-2); border-radius: 4px; margin-bottom: 8px;"></div>
+                </div>
+                <!-- Canvas representation -->
+                <div style="flex: 1; background: var(--color-surface-0); position: relative; padding: 16px;">
+                    <div style="position: absolute; top: 16px; right: 16px; width: 120px; height: 32px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: 4px;"></div>
+                    
+                    <div style="width: 100px; height: 100px; border: 2px solid var(--color-purple); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 8px;">
+                        <div style="width: 12px; height: 12px; background: white; border: 1px solid var(--color-purple); position: absolute; top: -6px; left: -6px;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BUTTONS -->
+        <section id="buttons" class="section">
+            <h1 class="section-title">Buttons</h1>
+            <p class="section-desc">Interactive elements use distinct surfaces depending on their priority.</p>
+            
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Primary Actions</h3>
+                    <div class="spec-id">cmp-button-primary</div>
+                </div>
+                <div class="spec-demo">
+                    <button class="btn btn-primary">Primary Button</button>
+                    <button class="btn btn-primary" style="margin-left: 16px;"><i class="ms-Icon ms-Icon--Add"></i> With Icon</button>
+                </div>
+                <div class="spec-desc">Used for the main action on a view (e.g., Save, Create). Drives user forward.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Limit to one primary button per screen or context area.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use for negative actions like Delete or Cancel.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Radius:</strong> <code>var(--radius-md)</code></li>
+                        <li><strong>Background:</strong> <code>var(--color-purple)</code></li>
+                        <li><strong>Hover BG:</strong> <code>var(--color-purple-active)</code></li>
+                        <li><strong>Typography:</strong> Readex Pro, 14px, Medium (500)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Secondary Actions</h3>
+                    <div class="spec-id">cmp-button-secondary</div>
+                </div>
+                <div class="spec-demo">
+                    <button class="btn btn-secondary">Secondary Button</button>
+                    <button class="btn btn-secondary" style="margin-left: 16px;"><i class="ms-Icon ms-Icon--Settings"></i> Settings</button>
+                </div>
+                <div class="spec-desc">Alternative actions or cancel buttons. Uses a subtle background that blends with panels.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Pair next to a Primary button as the alternative choice.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use to emphasize critical conversion paths.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Radius:</strong> <code>var(--radius-md)</code></li>
+                        <li><strong>Background:</strong> <code>var(--color-surface-2)</code></li>
+                        <li><strong>Hover BG:</strong> <code>var(--color-surface-3)</code></li>
+                        <li><strong>Text Color:</strong> <code>var(--color-text-secondary)</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Text Actions</h3>
+                    <div class="spec-id">cmp-button-text</div>
+                </div>
+                <div class="spec-demo">
+                    <button class="btn" style="background: transparent; color: var(--color-text-secondary); border: 1px solid transparent;">Cancel</button>
+                    <button class="btn" style="background: var(--color-surface-2); color: var(--color-text-primary); border: 1px solid transparent; margin-left: 16px;">Hovered State</button>
+                </div>
+                <div class="spec-desc">Used mostly in Modals (like ConfirmModal) for non-committal actions such as 'Cancel' or 'Back'.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Place them on the left of primary buttons in modal footers.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use borders; rely on the hover effect to show interaction.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Radius:</strong> <code>var(--radius-md)</code></li>
+                        <li><strong>Idle State:</strong> Transparent BG, <code>var(--color-text-secondary)</code></li>
+                        <li><strong>Hover State:</strong> <code>var(--color-surface-2)</code>, <code>var(--color-text-primary)</code></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- INPUTS -->
+        <section id="inputs" class="section">
+            <h1 class="section-title">Inputs & Sliders</h1>
+            <p class="section-desc">Form controls are designed to sit cleanly on panels without overwhelming visual noise.</p>
+            
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Standard Text Input</h3>
+                    <div class="spec-id">cmp-input-text</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="width: 300px;">
+                        <label style="display: block; font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 8px;">Standard Text Input</label>
+                        <input type="text" class="input-base" placeholder="Enter value...">
+                    </div>
+                </div>
+                <div class="spec-desc">Used for short-form data entry. Designed to sink into the panel visually.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Always provide a concise label above the input.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't rely solely on placeholders for instructions.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Radius:</strong> <code>var(--radius-sm)</code></li>
+                        <li><strong>Background:</strong> <code>var(--color-surface-0)</code> (lower elevation)</li>
+                        <li><strong>Border Focus:</strong> <code>var(--color-purple)</code></li>
+                        <li><strong>Typography:</strong> Readex Pro, 14px, Regular (400)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Segmented Slider</h3>
+                    <div class="spec-id">cmp-input-segmented-slider</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="width: 300px;">
+                        <label style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 8px;">
+                            <span>Opacity</span>
+                            <span>50%</span>
+                        </label>
+                        <div style="width: 100%; height: 24px; background: var(--color-surface-0); border-radius: 9999px; border: 1px solid var(--color-border); position: relative; display: flex; overflow: hidden;">
+                            <div style="flex: 1; display: flex; justify-content: center; align-items: center; z-index: 10;">
+                                <div style="width: 2px; height: 10px; background: var(--color-border); border-radius: 9999px;"></div>
+                            </div>
+                            <div style="flex: 1; display: flex; justify-content: center; align-items: center; z-index: 10;">
+                                <div style="width: 2px; height: 10px; background: var(--color-border); border-radius: 9999px;"></div>
+                            </div>
+                            <div style="flex: 1; display: flex; justify-content: center; align-items: center; z-index: 10;">
+                                <div style="width: 2px; height: 10px; background: var(--color-border); border-radius: 9999px;"></div>
+                            </div>
+                            <div style="flex: 1; display: flex; justify-content: center; align-items: center; z-index: 10;">
+                                <div style="width: 2px; height: 10px; background: var(--color-border); border-radius: 9999px;"></div>
+                            </div>
+                            <!-- Active segment -->
+                            <div style="position: absolute; top: 2px; bottom: 2px; left: calc(50% + 2px); width: calc(25% - 4px); background: var(--color-purple); border-radius: 9999px; z-index: 20; box-shadow: 0 1px 2px rgba(0,0,0,0.1);"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">A custom slider that snaps to predefined values (segments). Used for finite options like precise opacity steps or sizes.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Use for options where discrete steps are preferred over continuous floating values.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use it if the array of options exceeds 10 elements, as it becomes too dense.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Track:</strong> 24px height, <code>var(--color-surface-0)</code>, full rounded</li>
+                        <li><strong>Ticks:</strong> 2px width, 10px height, <code>var(--color-border)</code></li>
+                        <li><strong>Active Pill:</strong> <code>var(--color-purple)</code> with 2px padding inset</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODALS -->
+        <section id="modals" class="section">
+            <h1 class="section-title">Modals & Pop-ups</h1>
+            <p class="section-desc">Modals block the main application workflow to request mandatory user input or confirm destructive actions.</p>
+            
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Dialog Modal</h3>
+                    <div class="spec-id">cmp-modal-dialog</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="background: var(--color-surface-6); border-radius: var(--radius-xl); width: 400px; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+                        <h3 style="margin: 0 0 8px 0; font-size: 1.25rem;">Delete Layer?</h3>
+                        <p style="color: var(--color-text-secondary); font-size: 0.875rem; margin: 0 0 24px 0; line-height: 1.5;">This action cannot be undone. Are you sure you want to delete this layer permanently?</p>
+                        <div class="flex-gap" style="justify-content: flex-end;">
+                            <button class="btn btn-secondary">Cancel</button>
+                            <button class="btn btn-primary" style="background: #e74c3c;">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">Centered overlays for critical flows. They utilize the highest elevation (Surface-6).</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Dim the background Canvas (`rgba(0,0,0,0.5)`) to focus the user.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use for simple informative messages (use toasts instead).</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Radius:</strong> <code>var(--radius-xl)</code> (16px)</li>
+                        <li><strong>Background:</strong> <code>var(--color-surface-6)</code></li>
+                        <li><strong>Padding:</strong> 24px inner padding (multiples of 8)</li>
+                        <li><strong>Shadow:</strong> Custom high blur `0 20px 40px rgba(0,0,0,0.4)`</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- BARS -->
+        <section id="bars" class="section">
+            <h1 class="section-title">Bars</h1>
+            <p class="section-desc">Meevo-App utilizes different types of bars for navigation, status, and contextual actions.</p>
+            
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Top-Bar (Editor Header)</h3>
+                    <div class="spec-id">cmp-bar-top</div>
+                </div>
+                <div class="spec-demo" style="padding: 16px;">
+                    <div style="background: var(--color-surface-1); border-bottom: 1px solid var(--color-border); padding: 12px 24px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; border-radius: var(--radius-md);">
+                        <!-- Left -->
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div style="color: var(--color-text-secondary);"><i class="ms-Icon ms-Icon--Back"></i></div>
+                            <div style="display: flex; flex-direction: column;">
+                                <div style="font-weight: 500; color: var(--color-text-primary);">Draft Name</div>
+                                <div style="font-size: 0.65rem; color: var(--color-text-tertiary);">10 tiles • square</div>
+                            </div>
+                        </div>
+                        <!-- Center -->
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="background: var(--color-surface-0); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 4px; display: flex; gap: 4px;">
+                                <div style="padding: 4px 12px; background: var(--color-surface-2); color: var(--color-text-primary); border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; gap: 8px;"><i class="ms-Icon ms-Icon--WhiteBoardApp16"></i> Board</div>
+                                <div style="padding: 4px 12px; color: var(--color-text-secondary); border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; gap: 8px;"><i class="ms-Icon ms-Icon--PageData"></i> Cards</div>
+                                <div style="padding: 4px 12px; color: var(--color-text-secondary); border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; gap: 8px;"><i class="ms-Icon ms-Icon--CubeShape"></i> Dices</div>
+                            </div>
+                        </div>
+                        <!-- Right -->
+                        <div style="display: flex; align-items: center; gap: 16px; justify-content: flex-end;">
+                            <div style="font-size: 0.65rem; color: var(--color-text-tertiary); text-transform: uppercase; font-weight: 500;">✔ Auto-Save</div>
+                            <button class="btn" style="background: var(--color-text-primary); color: var(--color-text-inverse); display: flex; align-items: center; gap: 8px;"><i class="ms-Icon ms-Icon--Play"></i> Playtest</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">Global application header containing the draft information, module navigation, and primary play action.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Use a 3-column grid to keep the center navigation perfectly aligned to the screen center.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use Primary buttons (purple) in the header; Playtest uses the high-contrast Inverse theme.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Background:</strong> <code>var(--color-surface-1)</code></li>
+                        <li><strong>Layout:</strong> <code>grid-cols-3</code></li>
+                        <li><strong>Segmented Nav:</strong> <code>var(--color-surface-0)</code> container with 4px padding</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Tabs-Bar</h3>
+                    <div class="spec-id">cmp-bar-tabs</div>
+                </div>
+                <div class="spec-demo" style="padding: 16px;">
+                    <div style="background: var(--color-surface-1); border-bottom: 1px solid var(--color-border); height: 40px; width: 100%; display: flex; align-items: flex-end; padding: 0 16px; gap: 4px; border-radius: var(--radius-md) var(--radius-md) 0 0;">
+                        <div style="padding: 8px 16px; background: var(--color-surface-2); border: 1px solid var(--color-border); border-bottom: none; border-radius: var(--radius-md) var(--radius-md) 0 0; color: var(--color-purple); font-size: 0.75rem; font-weight: 500;">Table</div>
+                        <div style="padding: 8px 16px; color: var(--color-text-secondary); font-size: 0.75rem;">Tiles</div>
+                        <div style="padding: 8px 16px; color: var(--color-text-secondary); font-size: 0.75rem;">Design</div>
+                    </div>
+                </div>
+                <div class="spec-desc">Secondary navigation inside a module to switch contexts.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Connect the active tab visually to the content below it (remove bottom border).</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use more than 5 tabs to prevent overcrowding.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Tab Active BG:</strong> <code>var(--color-surface-2)</code></li>
+                        <li><strong>Tab Radius:</strong> <code>var(--radius-md) var(--radius-md) 0 0</code></li>
+                        <li><strong>Height:</strong> 40px</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SPACING -->
+        <section id="spacing" class="section">
+            <h1 class="section-title">Spacing System</h1>
+            <p class="section-desc">Consistent spacing is key to maintaining rhythm and visual hierarchy across the application.</p>
+            
+            <div class="card-showcase">
+                <h2>The 8pt Grid</h2>
+                <p style="color: var(--color-text-secondary); font-size: 0.875rem; margin-bottom: 24px; line-height: 1.6;">All margins, paddings, and absolute positioning steps should ideally fall on a multiple of 8. For tighter grouping of related elements (like an icon next to text), a 4px step is used as a micro-adjustment.</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 48px; font-size: 0.75rem; color: var(--color-text-secondary);">4px</div>
+                        <div style="height: 16px; width: 4px; background: var(--color-purple);"></div>
+                        <span style="font-size: 0.75rem; color: var(--color-text-tertiary);">Micro spacing (icon + text)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 48px; font-size: 0.75rem; color: var(--color-text-secondary);">8px</div>
+                        <div style="height: 16px; width: 8px; background: var(--color-purple);"></div>
+                        <span style="font-size: 0.75rem; color: var(--color-text-tertiary);">Tight grouping (list items)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 48px; font-size: 0.75rem; color: var(--color-text-secondary);">16px</div>
+                        <div style="height: 16px; width: 16px; background: var(--color-purple);"></div>
+                        <span style="font-size: 0.75rem; color: var(--color-text-tertiary);">Standard inner padding</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 48px; font-size: 0.75rem; color: var(--color-text-secondary);">24px</div>
+                        <div style="height: 16px; width: 24px; background: var(--color-purple);"></div>
+                        <span style="font-size: 0.75rem; color: var(--color-text-tertiary);">Section separation</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 48px; font-size: 0.75rem; color: var(--color-text-secondary);">32px</div>
+                        <div style="height: 16px; width: 32px; background: var(--color-purple);"></div>
+                        <span style="font-size: 0.75rem; color: var(--color-text-tertiary);">Major layout blocks</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DESIGN PHASE -->
+        <section id="design-phase" class="section">
+            <h1 class="section-title">Design Phase</h1>
+            <p class="section-desc">The Design Phase in Meevo-App is a specialized workflow mode focused exclusively on the visual editing of an individual tile (Casilla) or asset.</p>
+            
+            <div class="card-showcase" style="display: flex; flex-direction: column; gap: 24px;">
+                <div>
+                    <h2 style="font-size: 1.1rem; color: var(--color-purple); margin-bottom: 8px;">1. Objetivo</h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.6;">Aislar un elemento complejo (como una Casilla o Carta) para permitir su micro-edición (capas, textos, imágenes, opacidades) sin las distracciones ni la sobrecarga computacional del tablero global.</p>
+                </div>
+                
+                <div>
+                    <h2 style="font-size: 1.1rem; color: var(--color-purple); margin-bottom: 8px;">2. Contexto</h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.6;">Mientras que la fase "Board" sirve para macro-organización (colocar objetos, definir conexiones lógicas), la fase "Design" es un entorno de dibujo vectorial y espacial enfocado en el Asset seleccionado.</p>
+                </div>
+                
+                <div>
+                    <h2 style="font-size: 1.1rem; color: var(--color-purple); margin-bottom: 8px;">3. Concepto</h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.6;">El modelo mental es el de "entrar" en el objeto. Se accede haciendo doble clic sobre el elemento en el Canvas, cambiando instantáneamente las herramientas y atajos disponibles.</p>
+                </div>
+                
+                <div>
+                    <h2 style="font-size: 1.1rem; color: var(--color-purple); margin-bottom: 8px;">4. Visualización</h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.6;">El resto del tablero se oscurece (`opacity-50` o un dim) y los controles de interacción global se bloquean. El elemento enfocado resalta y muestra sus guías de edición (`SnapGuides`, redimensionamiento, etc.).</p>
+                </div>
+                
+                <div>
+                    <h2 style="font-size: 1.1rem; color: var(--color-purple); margin-bottom: 8px;">5. Atajos</h2>
+                    <ul style="color: var(--color-text-secondary); line-height: 1.6; list-style: disc; padding-left: 20px;">
+                        <li><strong>V:</strong> Cursor (Seleccionar/Mover)</li>
+                        <li><strong>R:</strong> Rectangle (Shape tool)</li>
+                        <li><strong>T:</strong> Text (Caja de texto)</li>
+                        <li><strong>I:</strong> Image (Subir/Insertar imagen)</li>
+                        <li><strong>Alt + Drag:</strong> Duplicar capa (`cursor-duplicate`)</li>
+                        <li><strong>Espacio + Drag:</strong> Paneo del canvas (`cursor-grabbing`)</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h2 style="font-size: 1.1rem; color: var(--color-purple); margin-bottom: 8px;">6. Importancia de los atajos</h2>
+                    <p style="color: var(--color-text-secondary); line-height: 1.6;">Dado que el usuario debe concentrarse en el diseño espacial, forzarlo a mover el mouse hacia una barra de herramientas constantemente rompe su flujo cognitivo. Los atajos garantizan una interacción fluida y profesional (como en Figma o Photoshop).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SIDEBARS -->
+        <section id="sidebars" class="section">
+            <h1 class="section-title">Sidebars</h1>
+            <p class="section-desc">Sidebars provide contextual tools and configuration properties without obstructing the central canvas view.</p>
+            
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Configuration Sidebar</h3>
+                    <div class="spec-id">cmp-sidebar-config</div>
+                </div>
+                <div class="spec-demo" style="padding: 16px;">
+                    <!-- Realistic sidebar preview -->
+                    <div style="width: 280px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column;">
+
+                        <!-- 1. TITLE HEADER -->
+                        <div style="padding: 14px 24px; border-bottom: 1px solid var(--color-border); flex-shrink: 0;">
+                            <div style="font-size: 1rem; font-weight: 500; color: var(--color-text-primary);">Table</div>
+                        </div>
+
+                        <div style="padding: 24px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; box-sizing: border-box; width: 100%;">
+
+                            <!-- 2. SINGLE FULL-WIDTH INPUT (label + dropdown) -->
+                            <div style="min-width: 0;">
+                                <div style="font-size: 0.65rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.07em;">Shape</div>
+                                <div style="background: var(--color-surface-2); border-radius: var(--radius-md); padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; min-height: 38px; box-sizing: border-box;">
+                                    <span style="font-size: 0.875rem; color: var(--color-text-primary);">Rectangle</span>
+                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" style="color: var(--color-text-tertiary); flex-shrink: 0;"><path d="M5.22 7.72a.75.75 0 0 0 0 1.06l4.25 4.25a.75.75 0 0 0 1.06 0l4.25-4.25a.75.75 0 0 0-1.06-1.06L10 11.44 6.28 7.72a.75.75 0 0 0-1.06 0Z"/></svg>
+                                </div>
+                            </div>
+
+                            <!-- 3. TWO INPUTS IN GRID (label above each, same row) -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div>
+                                    <div style="font-size: 0.65rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.07em;">Width</div>
+                                    <input type="number" value="800" style="width: 100%; background: var(--color-surface-2); border-radius: var(--radius-md); border: none; padding: 8px 12px; font-size: 0.875rem; color: var(--color-text-primary); min-height: 38px; box-sizing: border-box;" />
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.65rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.07em;">Height</div>
+                                    <input type="number" value="600" style="width: 100%; background: var(--color-surface-2); border-radius: var(--radius-md); border: none; padding: 8px 12px; font-size: 0.875rem; color: var(--color-text-primary); min-height: 38px; box-sizing: border-box;" />
+                                </div>
+                            </div>
+
+                            <!-- 4. COLOR INPUT ROW -->
+                            <div>
+                                <div style="font-size: 0.65rem; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.07em;">Color</div>
+                                <div style="background: var(--color-surface-2); border-radius: var(--radius-md); padding: 8px 12px; display: flex; align-items: center; gap: 12px; min-height: 38px;">
+                                    <div style="width: 22px; height: 22px; border-radius: 4px; background: #141E17; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0;"></div>
+                                    <span style="font-size: 0.875rem; color: var(--color-text-primary); font-family: monospace;">#141E17</span>
+                                </div>
+                            </div>
+
+                            <!-- 5. HR DIVIDER -->
+                            <hr style="border: none; border-top: 1px solid var(--color-border); margin: 0;" />
+
+                            <!-- 6. SECTION AFTER DIVIDER -->
+                            <div>
+                                <div style="font-size: 0.65rem; font-weight: 700; color: var(--color-text-secondary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.07em;">Layers</div>
+                                <div style="font-size: 0.75rem; color: var(--color-text-tertiary); padding: 4px 0;">No layers yet.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">Sidebars dynamically change their content based on user selection. Each module has its own sidebar instance (Table, Tile, Card, Dice, Layer).</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Always place a <strong>Title Header</strong> (`py-4 px-6 border-b`) as the first child of every sidebar.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use <code>max-width &gt; 50vw</code>; the sidebar is resizable between <code>minWidthRatio × vw</code> and <code>50vw</code>.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Default Width:</strong> 300px (resizable)</li>
+                        <li><strong>Min Width:</strong> <code>window.innerWidth × 0.12</code> (~154px on 1280px screen)</li>
+                        <li><strong>Max Width:</strong> <code>window.innerWidth × 0.50</code> (50vw)</li>
+                        <li><strong>Background:</strong> <code>var(--color-surface-1)</code></li>
+                        <li><strong>Title:</strong> <code>py-4 px-6 border-b</code>, 16px Medium</li>
+                        <li><strong>Section Padding:</strong> <code>px-6 py-6</code></li>
+                        <li><strong>Label:</strong> <code>text-xs font-medium uppercase tracking-wider text-secondary mb-2</code></li>
+                        <li><strong>Input Height:</strong> <code>min-h-[38px]</code>, <code>surface-2</code> bg, no border, focus ring purple</li>
+                        <li><strong>Grid Inputs:</strong> <code>grid grid-cols-2 gap-4</code> for paired values (W/H)</li>
+                        <li><strong>HR Divider:</strong> <code>&lt;hr class="border-meevo-border mb-6" /&gt;</code></li>
+                        <li><strong>Section Label:</strong> <code>text-xs font-bold uppercase tracking-wider text-secondary</code></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- DESIGN SIDEBAR -->
+        <section id="design-sidebar" class="section">
+            <h1 class="section-title">Design Sidebar</h1>
+            <p class="section-desc">The Design Phase exposes a dedicated right-side panel divided into focused sub-sections. Each section controls a distinct visual property of the selected layer.</p>
+
+            <!-- LAYERS PANEL -->
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Layers Panel</h3>
+                    <div class="spec-id">cmp-design-layers</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="width: 260px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden;">
+                        <div style="padding: 20px 24px 8px; font-size: 0.65rem; font-weight: 700; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.07em;">Layers</div>
+                        <div style="padding: 4px 16px 8px;">
+                            <!-- root folder row (selected) -->
+                            <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: var(--radius-sm); background: var(--color-surface-2); border: 1px solid var(--color-border); margin-bottom: 2px;">
+                                <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="color: var(--color-text-primary); flex-shrink:0;"><path d="M2 6a2 2 0 0 1 2-2h3.17a2 2 0 0 1 1.415.586l.828.828A2 2 0 0 0 10.828 6H16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6Z"/></svg>
+                                <span style="font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary);">Casilla-01</span>
+                            </div>
+                            <!-- layer row -->
+                            <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin-left: 16px; border-radius: var(--radius-sm); border: 1px solid transparent; margin-bottom: 2px;">
+                                <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="color: #AAAAAA; flex-shrink:0;"><path d="M17 5.5A2.5 2.5 0 0 0 14.5 3h-9A2.5 2.5 0 0 0 3 5.5v9A2.5 2.5 0 0 0 5.5 17h9a2.5 2.5 0 0 0 2.5-2.5v-9Z"/></svg>
+                                <span style="font-size: 0.875rem; color: var(--color-text-primary);">background</span>
+                            </div>
+                            <!-- layer row selected -->
+                            <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin-left: 16px; border-radius: var(--radius-sm); background: var(--color-surface-2); border: 1px solid var(--color-border); margin-bottom: 2px;">
+                                <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="color: #AAAAAA; flex-shrink:0;"><path d="M4 4.5A.5.5 0 0 1 4.5 4h11a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V5h-5v10h1.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1H9V5H4v1.5a.5.5 0 0 1-1 0v-2Z"/></svg>
+                                <span style="font-size: 0.875rem; color: var(--color-text-primary);">title</span>
+                            </div>
+                            <div style="font-size: 0.65rem; color: var(--color-text-tertiary); padding: 4px 8px;">Image • Text • Rect layers</div>
+                        </div>
+                        <!-- Template buttons -->
+                        <div style="padding: 8px 16px 12px; border-top: 1px solid var(--color-border); display: flex; flex-direction: column; gap: 6px;">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 7px; font-size: 0.875rem; font-weight: 500; color: var(--color-text-primary);">
+                                &#9733; Convert to Template
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">Tree view of layers inside a tile. Root is the tile container; child rows are individual layers (rect, text, image). Supports drag-to-reorder and double-click rename.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Indent child layers with <code>ml-4</code>. Highlight selected with <code>surface-2 + border</code>.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't remove the Template footer buttons — they are always present at the bottom.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Layer Row Height:</strong> ~30px, <code>py-1.5 px-3</code></li>
+                        <li><strong>Icons:</strong> <code>Square20Regular</code>, <code>TextFont20Regular</code>, <code>Image20Regular</code> at 14px</li>
+                        <li><strong>Selected State:</strong> <code>surface-2 border border-meevo-border</code></li>
+                        <li><strong>Footer:</strong> <code>border-t border-meevo-border p-4 space-y-2</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- POSITION -->
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Position & Alignment</h3>
+                    <div class="spec-id">cmp-design-position</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="width: 260px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+                        <div style="font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-secondary);">Position</div>
+                        <!-- X Y inputs -->
+                        <div style="display: flex; gap: 8px; overflow: hidden;">
+                            <div style="flex: 1; min-width: 0; display: flex; align-items: center; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 6px 8px;">
+                                <span style="font-size: 0.7rem; color: var(--color-text-tertiary); width: 14px; flex-shrink:0;">X</span>
+                                <input type="number" value="0" style="min-width: 0; width: 100%; background: transparent; border: none; font-size: 0.875rem; color: var(--color-text-primary); text-align: center; outline: none;" />
+                            </div>
+                            <div style="flex: 1; min-width: 0; display: flex; align-items: center; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 6px 8px;">
+                                <span style="font-size: 0.7rem; color: var(--color-text-tertiary); width: 14px; flex-shrink:0;">Y</span>
+                                <input type="number" value="0" style="min-width: 0; width: 100%; background: transparent; border: none; font-size: 0.875rem; color: var(--color-text-primary); text-align: center; outline: none;" />
+                            </div>
+                        </div>
+                        <!-- Align buttons -->
+                        <div style="display: flex; gap: 8px;">
+                            <!-- Horizontal -->
+                            <div style="flex: 1; display: flex; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 2px;">
+                                <button style="flex: 1; padding: 6px; display: flex; justify-content: center; border-radius: 4px; background: var(--color-surface-4);">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M3 5.25a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 5.25ZM3 10a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 3 10Zm0 4.75a.75.75 0 0 1 .75-.75h5.5a.75.75 0 0 1 0 1.5h-5.5a.75.75 0 0 1-.75-.75Z"/></svg>
+                                </button>
+                                <button style="flex: 1; padding: 6px; display: flex; justify-content: center; border-radius: 4px;">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M4.5 5.25a.75.75 0 0 1 .75-.75h9.5a.75.75 0 0 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75ZM3 10a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 10Zm1.5 4.75a.75.75 0 0 1 .75-.75h9.5a.75.75 0 0 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75Z"/></svg>
+                                </button>
+                                <button style="flex: 1; padding: 6px; display: flex; justify-content: center; border-radius: 4px;">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M4.5 5.25a.75.75 0 0 1 .75-.75h9.5a.75.75 0 0 1 0 1.5h-9.5a.75.75 0 0 1-.75-.75ZM7.5 10a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 10Zm3 4.75a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1-.75-.75Z"/></svg>
+                                </button>
+                            </div>
+                            <!-- Vertical -->
+                            <div style="flex: 1; display: flex; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 2px;">
+                                <button style="flex: 1; padding: 6px; display: flex; justify-content: center; border-radius: 4px;">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M3.75 3a.75.75 0 0 0 0 1.5h12.5a.75.75 0 0 0 0-1.5H3.75Zm3 4.5A.75.75 0 0 0 6 8.25v3.5a.75.75 0 0 0 1.5 0v-3.5A.75.75 0 0 0 6.75 7.5Zm2.75.75a.75.75 0 0 1 1.5 0v3.5a.75.75 0 0 1-1.5 0v-3.5Zm3.5-.75a.75.75 0 0 0-.75.75v3.5a.75.75 0 0 0 1.5 0v-3.5a.75.75 0 0 0-.75-.75Z"/></svg>
+                                </button>
+                                <button style="flex: 1; padding: 6px; display: flex; justify-content: center; border-radius: 4px;">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3.75a.75.75 0 0 1 .75.75v11.5a.75.75 0 0 1-1.5 0V4.5A.75.75 0 0 1 10 3.75ZM6.75 7.5A.75.75 0 0 0 6 8.25v3.5a.75.75 0 0 0 1.5 0v-3.5A.75.75 0 0 0 6.75 7.5Zm3.25.75a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-.75.75h-2.5A.75.75 0 0 1 10 12v-3.5Z"/></svg>
+                                </button>
+                                <button style="flex: 1; padding: 6px; display: flex; justify-content: center; border-radius: 4px;">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M3.75 15a.75.75 0 0 0 0 1.5h12.5a.75.75 0 0 0 0-1.5H3.75ZM6 8.25a.75.75 0 0 0-1.5 0v3.5a.75.75 0 0 0 1.5 0v-3.5Zm3.25-.75a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5a.75.75 0 0 1 .75-.75Zm3.5 0a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5a.75.75 0 0 1 .75-.75Z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">X/Y coordinate inputs plus two groups of 3-button alignment shortcuts for horizontal (Left/Center/Right) and vertical (Top/Middle/Bottom) alignment within the parent tile bounds.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Active align button uses <code>surface-4</code> background. X/Y inputs use <code>step="0.001"</code> for sub-pixel precision.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't separate the two align groups — horizontal and vertical must sit side-by-side in the same row.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Inputs:</strong> prefix letter (X/Y), <code>surface-2 rounded-md px-2 py-1.5</code></li>
+                        <li><strong>Align Row:</strong> <code>grid w-1/2</code> each group, 3 buttons</li>
+                        <li><strong>Icons:</strong> <code>TextAlignLeft20Regular</code>, <code>AlignTop20Regular</code>, etc. at 14px</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SIZE -->
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Size Editor (Fixed / Hug / Fill)</h3>
+                    <div class="spec-id">cmp-design-size</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="width: 260px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 16px;">
+                        <div style="font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-secondary); margin-bottom: 10px;">Size</div>
+                        <div style="display: flex; gap: 8px;">
+                            <!-- W fixed -->
+                            <div style="flex: 1; display: flex; align-items: center; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 6px 8px; position: relative;">
+                                <span style="font-size: 0.7rem; color: var(--color-text-tertiary); width: 14px;">W</span>
+                                <input type="number" value="120" style="flex: 1; background: transparent; border: none; font-size: 0.875rem; color: var(--color-text-primary); text-align: center; outline: none;" />
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; right: 6px; color: var(--color-text-tertiary);"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                            <!-- H hug -->
+                            <div style="flex: 1; display: flex; align-items: center; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 6px 8px; position: relative;">
+                                <span style="font-size: 0.7rem; color: var(--color-text-tertiary); width: 14px;">H</span>
+                                <div style="flex: 1; text-align: center; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #777;">HUG</div>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; right: 6px; color: var(--color-text-tertiary);"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                        </div>
+                        <!-- Mode dropdown hint -->
+                        <div style="margin-top: 10px; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; font-size: 0.75rem;">
+                            <div style="padding: 6px 12px; color: var(--color-text-primary); text-transform: uppercase;">fixed</div>
+                            <div style="padding: 6px 12px; color: var(--color-text-primary); text-transform: uppercase; background: rgba(130,90,200,0.25);">hug</div>
+                            <div style="padding: 6px 12px; color: var(--color-text-primary); text-transform: uppercase;">fill</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">Dual W/H inputs, each with a dropdown toggle offering three sizing modes: <strong>Fixed</strong> (numeric px), <strong>Hug</strong> (wraps content, text-only), <strong>Fill</strong> (stretches to parent).</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>When mode is not <code>fixed</code>, show the mode label in uppercase gray instead of the number input.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't offer <code>hug</code> mode for non-text layers — it is only valid for <code>type === 'text'</code>.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Prefix:</strong> W / H in <code>text-tertiary text-xs w-4</code></li>
+                        <li><strong>Mode Dropdown:</strong> <code>surface-2 border rounded-md w-24</code> absolute top-full</li>
+                        <li><strong>Modes:</strong> <code>fixed | hug | fill</code> — <code>hug</code> only for text</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- APPEARANCE -->
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Appearance (Opacity & Rotation)</h3>
+                    <div class="spec-id">cmp-design-appearance</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="width: 260px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 16px;">
+                        <div style="font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-secondary); margin-bottom: 10px;">Appearance</div>
+                        <div style="display: flex; gap: 8px; overflow: hidden;">
+                            <div style="flex: 1; min-width: 0; display: flex; align-items: center; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 6px 8px;">
+                                <span style="font-size: 0.7rem; color: var(--color-text-tertiary); width: 14px; flex-shrink:0;">O</span>
+                                <input type="number" value="100" style="min-width: 0; width: 100%; background: transparent; border: none; font-size: 0.875rem; color: var(--color-text-primary); text-align: center; outline: none;" />
+                                <span style="font-size: 0.7rem; color: var(--color-text-tertiary); flex-shrink:0;">%</span>
+                            </div>
+                            <div style="flex: 1; min-width: 0; display: flex; align-items: center; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 6px 8px;">
+                                <span style="font-size: 0.7rem; color: var(--color-text-tertiary); width: 14px; flex-shrink:0;">R</span>
+                                <input type="number" value="0" style="min-width: 0; width: 100%; background: transparent; border: none; font-size: 0.875rem; color: var(--color-text-primary); text-align: center; outline: none;" />
+                                <span style="font-size: 0.7rem; color: var(--color-text-tertiary); flex-shrink:0;">°</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">Two compact inputs — O (Opacity 0–100%) and R (Rotation in degrees). Followed by a border-b divider before the next section.</div>
+                <div class="spec-rules">
+                    <div class="rule-do"><h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4><p>Clamp opacity with <code>Math.max(0, Math.min(100, val))</code>.</p></div>
+                    <div class="rule-dont"><h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4><p>Don't use full-word labels — single letter prefixes (O, R) save space in compact layout.</p></div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Layout:</strong> <code>flex gap-2</code>, 2 equal columns</li>
+                        <li><strong>Suffix:</strong> <code>%</code> for opacity, <code>°</code> for rotation</li>
+                        <li><strong>Border after:</strong> <code>pb-6 border-b border-meevo-border</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- FILL -->
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Fill</h3>
+                    <div class="spec-id">cmp-design-fill</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="width: 260px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-secondary);">Fill</div>
+                            <div style="font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-purple);">Prop.</div>
+                        </div>
+                        <!-- color row -->
+                        <div style="display: flex; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; padding: 4px; gap: 8px; align-items: center; height: 32px;">
+                            <div style="width: 20px; height: 20px; border-radius: 3px; border: 1px solid #555; background: #7C4DFF; flex-shrink:0;"></div>
+                            <div style="font-size: 0.875rem; color: var(--color-text-primary); text-transform: uppercase; flex: 1;">7C4DFF</div>
+                        </div>
+                        <!-- bound state example -->
+                        <div style="font-size: 0.7rem; color: var(--color-text-tertiary);">→ Bound: Property binding replaces color swatch</div>
+                    </div>
+                </div>
+                <div class="spec-desc">Color swatch + hex text. A "Prop." button in the header allows binding the fill to a variable property. When bound, the row shows a purple tag instead of the color picker.</div>
+                <div class="spec-rules">
+                    <div class="rule-do"><h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4><p>Always show the "Prop." button in the section header right side.</p></div>
+                    <div class="rule-dont"><h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4><p>Don't use a native <code>&lt;input type="color"&gt;</code> — clicking the swatch opens the custom <code>ColorPickerModal</code>.</p></div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Swatch:</strong> <code>w-5 h-5 rounded-sm border border-[#555]</code></li>
+                        <li><strong>Row:</strong> <code>h-8 surface-2 border rounded-md p-1 gap-2</code></li>
+                        <li><strong>Bound State:</strong> <code>bg-meevo-purple border-purple/50 text-white</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- STROKE -->
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Stroke</h3>
+                    <div class="spec-id">cmp-design-stroke</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="width: 260px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-secondary);">Stroke</div>
+                            <div style="font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-purple);">Prop.</div>
+                        </div>
+                        <div style="display: flex; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; height: 32px; align-items: center;">
+                            <!-- width icon -->
+                            <div style="width: 32px; display: flex; align-items: center; justify-content: center; color: #777; font-size: 0.7rem; flex-shrink:0;">☰</div>
+                            <input type="number" value="2" style="width: 36px; background: transparent; border: none; border-right: 1px solid var(--color-border); font-size: 0.875rem; color: var(--color-text-primary); text-align: center; outline: none; padding: 0;" />
+                            <!-- color swatch + hex -->
+                            <div style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 0 8px; border-right: 1px solid var(--color-border);">
+                                <div style="width: 16px; height: 16px; border-radius: 3px; border: 1px solid #555; background: #FFFFFF; flex-shrink:0;"></div>
+                                <div style="font-size: 0.8rem; color: var(--color-text-primary);">FFFFFF</div>
+                            </div>
+                            <!-- opacity -->
+                            <input type="number" value="100" style="width: 36px; background: transparent; border: none; font-size: 0.875rem; color: var(--color-text-primary); text-align: center; outline: none;" />
+                            <div style="padding-right: 8px; font-size: 0.75rem; color: #777;">%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">Single compound row: stroke-width (px) | color swatch + hex | opacity %. All in one <code>h-8</code> row with vertical dividers between segments.</div>
+                <div class="spec-rules">
+                    <div class="rule-do"><h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4><p>Use <code>border-r border-meevo-border</code> between each of the 3 segments inside the row.</p></div>
+                    <div class="rule-dont"><h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4><p>Don't split into separate rows — the 3 segments always live in a single compact row.</p></div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Row Height:</strong> <code>h-8</code></li>
+                        <li><strong>Width input:</strong> <code>w-10 text-center</code></li>
+                        <li><strong>Opacity suffix:</strong> <code>%</code></li>
+                        <li><strong>Left icon:</strong> ☰ line-weight icon at 14px in <code>#777</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TYPOGRAPHY -->
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Typography (Text Layers Only)</h3>
+                    <div class="spec-id">cmp-design-typography</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="width: 260px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-secondary);">Typography</div>
+                        <!-- Font family -->
+                        <div style="background: var(--color-surface-2); border-radius: var(--radius-md); padding: 6px 10px; font-size: 0.875rem; color: var(--color-text-primary); font-family: 'Inter', sans-serif; display: flex; justify-content: space-between; align-items: center;">
+                            Inter
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                        <!-- Weight + Size -->
+                        <div style="display: flex; gap: 8px;">
+                            <div style="flex: 1; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 6px 10px; font-size: 0.875rem; color: var(--color-text-primary); display: flex; justify-content: space-between; align-items: center;">
+                                Regular
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                            <div style="width: 56px; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 6px 8px; text-align: center; font-size: 0.875rem; color: var(--color-text-primary);">14</div>
+                        </div>
+                        <!-- Auto-size toggle -->
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 32px; height: 16px; background: var(--color-surface-4); border-radius: 99px; position: relative;">
+                                <div style="width: 12px; height: 12px; background: var(--color-text-tertiary); border-radius: 50%; position: absolute; top: 2px; left: 2px;"></div>
+                            </div>
+                            <span style="font-size: 0.7rem; color: var(--color-text-secondary);">Auto-Size</span>
+                        </div>
+                        <!-- H + V align -->
+                        <div style="display: flex; gap: 8px; margin-top: 4px;">
+                            <!-- H-align: TextAlignLeft / Center (active) / Right -->
+                            <div style="flex: 1; display: flex; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 2px;">
+                                <!-- TextAlignLeft20Regular -->
+                                <button style="flex:1; padding: 5px; display:flex; justify-content:center; border-radius:4px;">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="color: var(--color-text-primary);">
+                                        <path d="M2 4.75C2 4.34 2.34 4 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm0 5c0-.41.34-.75.75-.75h9.5a.75.75 0 0 1 0 1.5h-9.5A.75.75 0 0 1 2 9.75Zm0 5c0-.41.34-.75.75-.75h11.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 14.75Z"/>
+                                    </svg>
+                                </button>
+                                <!-- TextAlignCenter20Regular (active) -->
+                                <button style="flex:1; padding: 5px; display:flex; justify-content:center; border-radius:4px; background: var(--color-surface-4);">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="color: var(--color-text-primary);">
+                                        <path d="M2 4.75C2 4.34 2.34 4 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm2.5 5c0-.41.34-.75.75-.75h9.5a.75.75 0 0 1 0 1.5h-9.5A.75.75 0 0 1 4.5 9.75Zm-2.5 5c0-.41.34-.75.75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 14.75Z"/>
+                                    </svg>
+                                </button>
+                                <!-- TextAlignRight20Regular -->
+                                <button style="flex:1; padding: 5px; display:flex; justify-content:center; border-radius:4px;">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="color: var(--color-text-primary);">
+                                        <path d="M2 4.75C2 4.34 2.34 4 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75Zm5.5 5c0-.41.34-.75.75-.75h9.5a.75.75 0 0 1 0 1.5h-9.5A.75.75 0 0 1 7.5 9.75ZM2 14.75c0-.41.34-.75.75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 14.75Z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <!-- V-align: AlignTop / CenterVertical (active) / Bottom -->
+                            <div style="flex: 1; display: flex; background: var(--color-surface-2); border-radius: var(--radius-md); padding: 2px;">
+                                <!-- AlignTop20Regular -->
+                                <button style="flex:1; padding: 5px; display:flex; justify-content:center; border-radius:4px;">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="color: var(--color-text-primary);">
+                                        <path d="M2.75 2.5a.75.75 0 0 0 0 1.5h14.5a.75.75 0 0 0 0-1.5H2.75ZM6 6.75A.75.75 0 0 1 6.75 6h2.5a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-1.5 0V7.5H7.5v9.75a.75.75 0 0 1-1.5 0V6.75Zm5.5 0a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v6.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1-.75-.75v-6.5Zm1.5.75v5h1v-5h-1Z"/>
+                                    </svg>
+                                </button>
+                                <!-- AlignCenterVertical20Regular (active) -->
+                                <button style="flex:1; padding: 5px; display:flex; justify-content:center; border-radius:4px; background: var(--color-surface-4);">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="color: var(--color-text-primary);">
+                                        <path d="M2.75 9.25a.75.75 0 0 0 0 1.5h14.5a.75.75 0 0 0 0-1.5H2.75ZM6 4.25A.75.75 0 0 1 6.75 3.5h2.5a.75.75 0 0 1 .75.75v11.5a.75.75 0 0 1-1.5 0V5H7.5v10.75a.75.75 0 0 1-1.5 0V4.25Zm5.5 2.5a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v6.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1-.75-.75v-6.5Zm1.5.75v5h1v-5h-1Z"/>
+                                    </svg>
+                                </button>
+                                <!-- AlignBottom20Regular -->
+                                <button style="flex:1; padding: 5px; display:flex; justify-content:center; border-radius:4px;">
+                                    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="color: var(--color-text-primary);">
+                                        <path d="M2.75 16a.75.75 0 0 0 0 1.5h14.5a.75.75 0 0 0 0-1.5H2.75ZM6 2.75A.75.75 0 0 1 6.75 2h2.5a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-1.5 0V3.5H7.5v9.75a.75.75 0 0 1-1.5 0V2.75Zm5.5 3.5a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v6.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1-.75-.75v-6.5Zm1.5.75v5h1v-5h-1Z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">Only shown when the selected layer is <code>type === 'text'</code>. Contains Font Family dropdown, Weight dropdown + Size input, Auto-Size toggle, and H/V text alignment buttons.</div>
+                <div class="spec-rules">
+                    <div class="rule-do"><h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4><p>When Auto-Size is ON, replace the size input value with <code>'Auto'</code> string.</p></div>
+                    <div class="rule-dont"><h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4><p>Don't show Typography for <code>rect</code> or <code>image</code> layers — this section is conditional.</p></div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Fonts:</strong> Inter, Outfit, Poppins, Roboto, Open Sans, Lato, Montserrat</li>
+                        <li><strong>Weights:</strong> Light (300), Regular (400), Medium (500), Bold (700)</li>
+                        <li><strong>H-Align Icons:</strong> <code>TextAlignLeft/Center/Right20Regular</code></li>
+                        <li><strong>V-Align Icons:</strong> <code>AlignTop/CenterVertical/Bottom20Regular</code></li>
+                        <li><strong>Auto-Size toggle:</strong> <code>w-8 h-4 rounded-full surface-4</code> → purple when active</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TEMPLATES -->
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Templates (Reusable Components)</h3>
+                    <div class="spec-id">cmp-design-templates</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="width: 260px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden;">
+                        <div style="padding: 16px; border-bottom: 1px solid var(--color-border); display: flex; flex-direction: column; gap: 8px;">
+                            <!-- Connected state -->
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--color-surface-2); border: 1px solid var(--color-purple); border-radius: var(--radius-md); padding: 7px; font-size: 0.875rem; font-weight: 500; color: var(--color-purple);">
+                                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M9.89 2.93a.75.75 0 0 1 .22 0l7 2.1a.75.75 0 0 1 0 1.44l-7 2.1a.75.75 0 0 1-.22 0l-7-2.1a.75.75 0 0 1 0-1.44l7-2.1Z"/></svg>
+                                Update Template
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-md); padding: 7px; font-size: 0.875rem; font-weight: 500; color: #F87171;">
+                                ✕ Disconnect Template
+                            </div>
+                        </div>
+                        <div style="padding: 12px 16px; font-size: 0.7rem; color: var(--color-text-tertiary);">Disconnected state shows "Convert" + "Connect" buttons</div>
+                    </div>
+                </div>
+                <div class="spec-desc">Bottom of the Layers panel. Two states: <strong>Disconnected</strong> — shows "Convert to Template" + "Connect Template". <strong>Connected</strong> — shows "Update Template" (purple) + "Disconnect Template" (red).</div>
+                <div class="spec-rules">
+                    <div class="rule-do"><h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4><p>Keep both buttons always visible at the bottom of the Layers sidebar, in <code>border-t p-4 space-y-2</code>.</p></div>
+                    <div class="rule-dont"><h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4><p>Don't hide the template section when no template is connected — the "Convert" state must always be accessible.</p></div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Connected primary:</strong> <code>border-meevo-purple text-meevo-purple</code></li>
+                        <li><strong>Disconnect:</strong> <code>border-red-500/20 text-red-400 hover:bg-red-500/10</code></li>
+                        <li><strong>Disconnected state:</strong> <code>surface-2 border-meevo-border text-meevo-text-primary</code></li>
+                        <li><strong>Icon:</strong> <code>Star20Regular</code> for both convert/update actions</li>
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- MENUS -->
+        <section id="menus" class="section">
+            <h1 class="section-title">Dropdowns & Context Menus</h1>
+            <p class="section-desc">Menus provide lists of actionable items without taking up permanent screen space. They use high elevation (Surface-5 or 6) to float above content.</p>
+            
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Dropdown Menu</h3>
+                    <div class="spec-id">cmp-menu-dropdown</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="background: var(--color-surface-5); border: 1px solid var(--color-border); border-radius: var(--radius-md); width: 200px; padding: 8px 0; box-shadow: 0 8px 16px rgba(0,0,0,0.2);">
+                        <div style="padding: 8px 16px; font-size: 0.875rem; cursor: default; background: var(--color-surface-4); color: var(--color-purple);">Option 1 (Hovered)</div>
+                        <div style="padding: 8px 16px; font-size: 0.875rem; color: var(--color-text-secondary);">Option 2</div>
+                        <div style="padding: 8px 16px; font-size: 0.875rem; color: var(--color-text-secondary);">Option 3</div>
+                    </div>
+                </div>
+                <div class="spec-desc">Triggered by a click on a button or selector. Used for single-choice lists.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Highlight the hovered row with `Surface-4`.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use for more than 10 items without adding a scrollbar.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Background:</strong> <code>var(--color-surface-5)</code></li>
+                        <li><strong>Radius:</strong> <code>var(--radius-md)</code></li>
+                        <li><strong>Row Padding:</strong> 8px 16px</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Context Menu</h3>
+                    <div class="spec-id">cmp-menu-context</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); width: 256px; padding: 4px 0; box-shadow: 0 12px 24px rgba(0,0,0,0.3); display: flex; flex-direction: column;">
+                        <!-- Sector A -->
+                        <div style="border-bottom: 1px solid var(--color-border); padding-bottom: 4px; margin-bottom: 4px;">
+                            <div style="padding: 4px 12px; font-size: 0.65rem; color: var(--color-text-tertiary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Ir a</div>
+                            <div style="padding: 6px 12px; font-size: 0.875rem; color: var(--color-text-secondary); display: flex; justify-content: space-between;">
+                                <span>Components</span>
+                                <span style="font-size: 0.75rem; color: var(--color-text-tertiary);">1</span>
+                            </div>
+                        </div>
+                        <!-- Sector B -->
+                        <div style="border-bottom: 1px solid var(--color-border); padding-bottom: 4px; margin-bottom: 4px;">
+                            <div style="padding: 4px 12px; font-size: 0.65rem; color: var(--color-text-tertiary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Vistas de Board</div>
+                            <div style="padding: 6px 12px; font-size: 0.875rem; color: var(--color-text-primary); background: rgba(255,255,255,0.05); display: flex; justify-content: space-between;">
+                                <span style="display: flex; align-items: center; gap: 8px;">Ir a Table <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--color-purple);"></div></span>
+                                <span style="font-size: 0.75rem; color: var(--color-text-tertiary);">Shift + 1</span>
+                            </div>
+                        </div>
+                        <!-- Sector C -->
+                        <div style="border-bottom: 1px solid var(--color-border); padding-bottom: 4px; margin-bottom: 4px;">
+                            <div style="padding: 6px 12px; font-size: 0.875rem; color: var(--color-text-secondary); display: flex; justify-content: space-between;">
+                                <span>Zoom In</span>
+                                <span style="font-size: 0.75rem; color: var(--color-text-tertiary);">CTRL+SCROLL IN</span>
+                            </div>
+                            <div style="padding: 6px 12px; font-size: 0.875rem; color: var(--color-text-secondary); display: flex; justify-content: space-between;">
+                                <span>Undo</span>
+                                <span style="font-size: 0.75rem; color: var(--color-text-tertiary);">Ctrl + Z</span>
+                            </div>
+                        </div>
+                        <!-- Sector D -->
+                        <div style="padding-top: 4px;">
+                            <div style="padding: 4px 12px; font-size: 0.65rem; color: var(--color-text-tertiary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Herramientas</div>
+                            <div style="padding: 6px 12px; font-size: 0.875rem; color: var(--color-text-secondary); display: flex; justify-content: space-between;">
+                                <span>Cursor / Seleccionar</span>
+                                <span style="font-size: 0.75rem; color: var(--color-text-tertiary);">V</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">Triggered by right-clicking elements. Dynamic sections depend on the active tab (e.g. 'Vistas de Board' vs 'Entornos de Dices').</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Group items by category with small uppercase headings (`text-[11px] uppercase tracking-wider`).</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't omit keyboard shortcuts; always align them to the right using flex-between.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Background:</strong> <code>var(--color-surface-1)</code></li>
+                        <li><strong>Item Layout:</strong> `justify-between items-center`</li>
+                        <li><strong>Typography:</strong> Text 14px, Shortcuts 12px</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADVANCED COMPONENTS -->
+        <section id="advanced-components" class="section">
+            <h1 class="section-title">Toolbars & Pickers</h1>
+            <p class="section-desc">Specialized floating or embedded components for design editing.</p>
+            
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Floating Tool-bar</h3>
+                    <div class="spec-id">cmp-floating-toolbar</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 4px; display: inline-flex; box-shadow: 0 16px 32px rgba(0,0,0,0.4);">
+                        <!-- Cursor20Regular (active) -->
+                        <div style="width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--color-surface-5); color: var(--color-text-primary); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 2.5a.5.5 0 0 0-.5.5v12.5a.5.5 0 0 0 .854.354L7.5 13.207l2.146 2.147a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0 0-.708L10.207 10.5l2.647-2.646A.5.5 0 0 0 12.5 7H5V3a.5.5 0 0 0-.5-.5Z"/></svg>
+                        </div>
+                        <!-- Square20Regular -->
+                        <div style="width: 40px; height: 40px; border-radius: var(--radius-sm); color: var(--color-text-tertiary); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5Zm2-1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5Z"/></svg>
+                        </div>
+                        <!-- Image20Regular -->
+                        <div style="width: 40px; height: 40px; border-radius: var(--radius-sm); color: var(--color-text-tertiary); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17 5.5A2.5 2.5 0 0 0 14.5 3h-9A2.5 2.5 0 0 0 3 5.5v9A2.5 2.5 0 0 0 5.5 17h9a2.5 2.5 0 0 0 2.5-2.5v-9ZM4 5.5A1.5 1.5 0 0 1 5.5 4h9A1.5 1.5 0 0 1 16 5.5v5.586l-2.293-2.293a1 1 0 0 0-1.414 0l-4 4-1.293-1.293a1 1 0 0 0-1.414 0L4 12.793V5.5ZM5.5 16A1.5 1.5 0 0 1 4 14.5V14.2l2-2 1.293 1.293a1 1 0 0 0 1.414 0l4-4L16 13v1.5A1.5 1.5 0 0 1 14.5 16h-9ZM8 7.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/></svg>
+                        </div>
+                        <!-- TextFont20Regular -->
+                        <div style="width: 40px; height: 40px; border-radius: var(--radius-sm); color: var(--color-text-tertiary); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M4 4.5A.5.5 0 0 1 4.5 4h11a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V5h-5v10h1.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1H9V5H4v1.5a.5.5 0 0 1-1 0v-2Z"/></svg>
+                        </div>
+                        <!-- Pen20Regular -->
+                        <div style="width: 40px; height: 40px; border-radius: var(--radius-sm); color: var(--color-text-tertiary); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16.06 2.44a1.5 1.5 0 0 0-2.12 0L5.5 10.88a2.5 2.5 0 0 0-.65 1.17l-.72 2.88a.5.5 0 0 0 .61.61l2.88-.72a2.5 2.5 0 0 0 1.17-.65l8.44-8.44a1.5 1.5 0 0 0 0-2.12L16.06 2.44Zm-1.06.94a.5.5 0 0 1 .7 0l1 1a.5.5 0 0 1 0 .7L15 6.79l-1.7-1.7L15 5.08Zm-1.06 1.06 1.7 1.7-6.76 6.76a1.5 1.5 0 0 1-.7.39l-2.1.52.52-2.1a1.5 1.5 0 0 1 .39-.7l6.95-6.57Z"/></svg>
+                        </div>
+                        <!-- DrawShape20Regular -->
+                        <div style="width: 40px; height: 40px; border-radius: var(--radius-sm); color: var(--color-text-tertiary); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 2A1.5 1.5 0 0 0 13 3.5v.09A8.5 8.5 0 0 0 3.59 13H3.5a1.5 1.5 0 1 0 0 1h.166A8.5 8.5 0 0 0 13 4.41v.09a1.5 1.5 0 1 0 1 0v-.09A8.5 8.5 0 0 0 16.41 14h.09a1.5 1.5 0 1 0 0-1h-.166A8.5 8.5 0 0 0 14 4.59V4.5A1.5 1.5 0 0 0 14.5 2ZM4.5 8a7.5 7.5 0 0 1 7.5-7.5h.5a7.5 7.5 0 0 1 4.44 13.5H16a.5.5 0 0 0-.5.5 7.5 7.5 0 0 1-7.5 7.5H7.5a7.5 7.5 0 0 1-4.44-13.5H3a.5.5 0 0 0 .5-.5Z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">A floating dock of design tools (Cursor, Shape, Text, Image), appearing in the bottom right corner of the Design Phase.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Highlight the active tool with `surface-5` background and primary text color.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use large icons; keep them centered in 40x40px hit areas.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Background:</strong> <code>var(--color-surface-2)</code></li>
+                        <li><strong>Padding:</strong> 4px around the buttons</li>
+                        <li><strong>Button Size:</strong> 40x40px, <code>radius-md</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Color Picker Modal</h3>
+                    <div class="spec-id">cmp-color-picker</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: 12px; width: 240px; padding: 24px 16px 16px 16px; position: relative; box-shadow: 0 16px 32px rgba(0,0,0,0.4);">
+                        <!-- Drag Handle -->
+                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 12px 12px 0 0;">
+                            <div style="width: 32px; height: 4px; background: var(--color-surface-4); border-radius: 99px;"></div>
+                        </div>
+                        <!-- SV Area -->
+                        <div style="height: 160px; background: red; border-radius: 8px; margin-bottom: 16px; position: relative; overflow: hidden;">
+                            <div style="position: absolute; inset: 0; background: linear-gradient(to right, #fff, rgba(255,255,255,0));"></div>
+                            <div style="position: absolute; inset: 0; background: linear-gradient(to top, #000, rgba(0,0,0,0));"></div>
+                            <div style="width: 12px; height: 12px; border: 2px solid white; border-radius: 50%; background: #ff0000; position: absolute; right: 20px; top: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>
+                        </div>
+                        <!-- Hue Slider -->
+                        <div style="height: 16px; background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%); border-radius: 99px; margin-bottom: 16px; position: relative;">
+                            <div style="width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; left: 0; top: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>
+                        </div>
+                        <!-- Hex Input -->
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <div style="width: 32px; height: 32px; border-radius: 6px; background: #ff0000; border: 1px solid var(--color-border); flex-shrink: 0;"></div>
+                            <div style="flex: 1; background: var(--color-surface-0); border: 1px solid var(--color-border); border-radius: 6px; padding: 0 8px; display: flex; align-items: center; height: 32px;">
+                                <span style="font-size: 0.875rem; color: var(--color-text-primary);">#FF0000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">A fully draggable floating window for color selection.</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Include a distinct drag handle at the top (`w-8 h-1 surface-4`).</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use native HTML color inputs; they cannot float independently of the browser window constraints.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Container:</strong> 240px wide, `rounded-xl`, `bg-meevo-surface-2`</li>
+                        <li><strong>SV Gradient:</strong> 160px height</li>
+                        <li><strong>Input:</strong> `surface-0` with focus ring support</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CURSORS -->
+        <section id="cursors" class="section">
+            <h1 class="section-title">Cursors</h1>
+            <p class="section-desc">Meevo overrides the default operating system cursors in specific interactive zones using custom PNGs.</p>
+            
+            <div class="component-spec">
+                <div class="spec-header">
+                    <h3>Canvas Custom Cursors</h3>
+                    <div class="spec-id">cmp-cursor-set</div>
+                </div>
+                <div class="spec-demo">
+                    <div style="display: flex; gap: 32px; align-items: center; justify-content: center; width: 100%; flex-wrap: wrap;">
+                        <div style="text-align: center;">
+                            <div style="width: 48px; height: 48px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+                                <img src="../../public/Cursor-Default2.png" alt="Default Cursor" style="width: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">
+                            </div>
+                            <div style="font-weight: 500; font-size: 0.875rem;">Default</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="width: 48px; height: 48px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+                                <img src="../../public/Cursor-Create2.png" alt="Create Cursor" style="width: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">
+                            </div>
+                            <div style="font-weight: 500; font-size: 0.875rem;">Create</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="width: 48px; height: 48px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+                                <img src="../../public/Cursor-Duplicate2.png" alt="Duplicate Cursor" style="width: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">
+                            </div>
+                            <div style="font-weight: 500; font-size: 0.875rem;">Duplicate</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="width: 48px; height: 48px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+                                <img src="../../public/Cursor-Prohibited2.png" alt="Prohibited Cursor" style="width: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">
+                            </div>
+                            <div style="font-weight: 500; font-size: 0.875rem;">Prohibited</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="width: 48px; height: 48px; background: var(--color-surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+                                <i class="ms-Icon ms-Icon--HandsFree" style="font-size: 1.5rem; color: var(--color-text-primary);"></i>
+                            </div>
+                            <div style="font-weight: 500; font-size: 0.875rem;">Grab</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spec-desc">The application uses custom cursors initialized globally via index.css and toggled dynamically based on state (`activeDesignTool`, `altPressed`, `isPanning`).</div>
+                <div class="spec-rules">
+                    <div class="rule-do">
+                        <h4><i class="ms-Icon ms-Icon--CheckMark"></i> Do</h4>
+                        <p>Change to 'Grab' (`cursor-grabbing`) instantly when the user holds the Spacebar to pan.</p>
+                    </div>
+                    <div class="rule-dont">
+                        <h4><i class="ms-Icon ms-Icon--Cancel"></i> Don't</h4>
+                        <p>Don't use `crosshair` for selection tools; `cursor-create` is reserved exclusively for drawing shapes, text, or images.</p>
+                    </div>
+                </div>
+                <div class="spec-tokens">
+                    <h4>Tokens & Anatomy</h4>
+                    <ul>
+                        <li><strong>Global CSS:</strong> Defined with `!important` to force application over browser defaults.</li>
+                        <li><strong>Offset:</strong> Custom PNG cursors use a `16 16` offset to center the hit area (except default).</li>
+                        <li><strong>Classes:</strong> `.cursor-create`, `.cursor-duplicate`, `.cursor-prohibited`, `cursor-grabbing`.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <script src="app.js?v=4"></script>
+</body>
+</html>

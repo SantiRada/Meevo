@@ -36,14 +36,14 @@ export const PropertyBindingModal: React.FC<PropertyBindingModalProps> = ({
   });
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-[#0C0C0E] border border-[#CCCCCC]/10 rounded-lg shadow-2xl w-[400px] flex flex-col max-h-[80vh]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="bg-meevo-surface-6 border border-meevo-border rounded-lg shadow-2xl w-[400px] flex flex-col max-h-[80vh]">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#CCCCCC]/10 shrink-0">
+        <div className="flex items-center justify-between p-6 border-b border-meevo-border shrink-0">
           <h2 className="text-lg font-medium text-meevo-text-primary">Bind Property</h2>
           <button 
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-md border border-[#333333] hover:bg-[#1A1A1D] text-meevo-text-primary transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-md border border-meevo-border hover:bg-meevo-surface-2 text-meevo-text-primary transition-colors"
           >
             <Dismiss20Regular />
           </button>
@@ -61,7 +61,7 @@ export const PropertyBindingModal: React.FC<PropertyBindingModalProps> = ({
                 <button
                   key={prop.id}
                   onClick={() => onBind(prop.id)}
-                  className="w-full flex items-center justify-between p-4 rounded-md bg-[#1A1A1D] border border-[#333333] hover:border-meevo-purple hover:bg-[#201A24] transition-colors text-left group"
+                  className="w-full flex items-center justify-between p-4 rounded-md bg-meevo-surface-2 border border-meevo-border hover:border-meevo-purple hover:bg-[#201A24] transition-colors text-left group"
                 >
                   <div className="flex flex-col">
                     <span className="text-sm font-medium text-meevo-text-primary mb-1">{prop.name}</span>

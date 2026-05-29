@@ -100,9 +100,9 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
   const activeVariable = variables.find(v => v.id === activeTabId);
 
   return (
-    <div className="flex flex-col h-full bg-meevo-panel overflow-y-auto">
+    <div className="flex flex-col h-full bg-meevo-surface-1 overflow-y-auto">
       {/* TABS */}
-      <div className="flex border-b border-[#CCCCCC]/10 overflow-x-auto hide-scrollbar sticky top-0 bg-meevo-panel z-10 px-2 pt-2">
+      <div className="flex border-b border-meevo-border overflow-x-auto hide-scrollbar sticky top-0 bg-meevo-surface-1 z-10 px-2 pt-2">
         <button
           onClick={() => setActiveTabId('General')}
           className={`shrink-0 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTabId === 'General' ? 'border-meevo-purple text-meevo-text-primary' : 'border-transparent text-meevo-text-secondary hover:text-meevo-text-primary'}`}
@@ -133,7 +133,7 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
                 type="text" 
                 value={localName}
                 onChange={handleNameChange}
-                className="w-full bg-[#1A1A1D] border border-[#333333] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+                className="w-full bg-meevo-surface-2 border border-meevo-border rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
               />
             </div>
 
@@ -145,7 +145,7 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
                   type="number" 
                   value={localRounded}
                   onChange={handleRoundedChange}
-                  className="w-full bg-[#1A1A1D] border border-[#333333] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+                  className="w-full bg-meevo-surface-2 border border-meevo-border rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
                 />
                 <label className="flex items-center cursor-pointer w-max" title="Apply to all selected">
                   <div className="relative">
@@ -155,8 +155,8 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
                       checked={applyAllRounded}
                       onChange={(e) => setApplyAllRounded(e.target.checked)}
                     />
-                    <div className={`block w-9 h-5 rounded-full transition-colors ${applyAllRounded ? 'bg-meevo-purple' : 'bg-[#1A1A1D] border border-[#333333]'}`}></div>
-                    <div className={`dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${applyAllRounded ? 'transform translate-x-4' : ''}`}></div>
+                    <div className={`block w-9 h-5 rounded-full transition-colors ${applyAllRounded ? 'bg-meevo-purple' : 'bg-meevo-surface-2 border border-meevo-border'}`}></div>
+                    <div className={`dot absolute left-1 top-1 w-3 h-3 rounded-full transition-transform ${applyAllRounded ? 'bg-white transform translate-x-4' : 'bg-meevo-text-tertiary'}`}></div>
                   </div>
                   <span className="ml-2 text-xs font-bold text-meevo-text-secondary tracking-wider uppercase">Apply All</span>
                 </label>
@@ -165,7 +165,7 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
 
             {/* VARIABLES TOGGLE */}
             {variables.length > 0 && (
-              <div className="mb-6 border-t border-[#CCCCCC]/10 pt-6">
+              <div className="mb-6 border-t border-meevo-border pt-6">
                 <label className="block text-xs font-bold text-meevo-text-secondary tracking-wider mb-3 uppercase">Type Tiles</label>
                 <div className="flex flex-wrap gap-2">
                   {variables.map(v => {
@@ -175,12 +175,12 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
                       <button
                         key={v.id}
                         onClick={() => toggleVariable(v.id)}
-                        className={`relative w-8 h-8 rounded-md transition-all group flex items-center justify-center ${isActive ? 'ring-2 ring-white ring-offset-2 ring-offset-meevo-panel' : 'opacity-50 hover:opacity-100 border border-[#333333]'}`}
+                        className={`relative w-8 h-8 rounded-md transition-all group flex items-center justify-center ${isActive ? 'ring-2 ring-white ring-offset-2 ring-offset-meevo-panel' : 'opacity-50 hover:opacity-100 border border-meevo-border'}`}
                         style={{ backgroundColor: v.color }}
                         title={v.name}
                       >
-                        {!isActive && <Add20Regular className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />}
-                        {isActive && <Subtract20Regular className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />}
+                        {!isActive && <Add20Regular className="text-meevo-text-primary opacity-0 group-hover:opacity-100 transition-opacity" />}
+                        {isActive && <Subtract20Regular className="text-meevo-text-primary opacity-0 group-hover:opacity-100 transition-opacity" />}
                       </button>
                     );
                   })}
@@ -191,7 +191,7 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
         ) : (
           activeVariable && activeVariable.properties && activeVariable.properties.length > 0 ? (
             <div className="space-y-6">
-              <div className="flex items-center gap-2 mb-2 border-b border-[#CCCCCC]/10 pb-4">
+              <div className="flex items-center gap-2 mb-2 border-b border-meevo-border pb-4">
                 <div className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: activeVariable.color }} />
                 <h3 className="text-sm font-bold text-meevo-text-primary uppercase tracking-wide">{activeVariable.name} Properties</h3>
               </div>
@@ -210,7 +210,7 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
                     {prop.type === 'Number' && (
                       <div className="flex items-center">
                         {prop.prefix && (
-                          <span className="bg-[#1A1A1D] border border-r-0 border-[#333333] rounded-l-md px-3 py-2 text-sm text-meevo-text-secondary h-[38px] flex items-center">
+                          <span className="bg-meevo-surface-2 border border-r-0 border-meevo-border rounded-l-md px-3 py-2 text-sm text-meevo-text-secondary h-[38px] flex items-center">
                             {prop.prefix}
                           </span>
                         )}
@@ -218,7 +218,7 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
                           type="number"
                           value={val}
                           onChange={e => handlePropChange(e.target.value)}
-                          className={`w-full bg-[#1A1A1D] border border-[#333333] px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors h-[38px] ${prop.prefix ? 'rounded-r-md' : 'rounded-md'}`}
+                          className={`w-full bg-meevo-surface-2 border border-meevo-border px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors h-[38px] ${prop.prefix ? 'rounded-r-md' : 'rounded-md'}`}
                         />
                       </div>
                     )}
@@ -228,12 +228,12 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
                         type="text"
                         value={val}
                         onChange={e => handlePropChange(e.target.value)}
-                        className="w-full bg-[#1A1A1D] border border-[#333333] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors h-[38px]"
+                        className="w-full bg-meevo-surface-2 border border-meevo-border rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors h-[38px]"
                       />
                     )}
                     
                     {prop.type === 'Color' && (
-                      <div className="flex items-center gap-3 bg-[#1A1A1D] border border-[#333333] rounded-md px-2 py-1.5 focus-within:ring-1 focus-within:ring-meevo-purple h-[38px]">
+                      <div className="flex items-center gap-3 bg-meevo-surface-2 border border-meevo-border rounded-md px-2 py-1.5 focus-within:ring-1 focus-within:ring-meevo-purple h-[38px]">
                         <div 
                           className="w-5 h-5 rounded-sm border border-[#555] shrink-0 cursor-pointer" 
                           style={{ backgroundColor: val || '#ffffff' }}
@@ -257,7 +257,7 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
                         <select
                           value={val}
                           onChange={e => handlePropChange(e.target.value)}
-                          className="w-full bg-[#1A1A1D] border border-[#333333] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors h-[38px] appearance-none"
+                          className="w-full bg-meevo-surface-2 border border-meevo-border rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors h-[38px] appearance-none"
                         >
                           <option value="">Select an option</option>
                           {prop.listOptions?.map((opt, i) => (
@@ -292,3 +292,4 @@ export const TileDetailSidebar: React.FC<TileDetailSidebarProps> = ({
     </div>
   );
 };
+

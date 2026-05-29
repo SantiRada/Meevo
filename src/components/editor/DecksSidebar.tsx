@@ -1,0 +1,211 @@
+import React, { useState } from 'react';
+import type { CardDeckData } from '../../services/storage/types';
+import { ConfirmModal } from '../ui/ConfirmModal';
+import { 
+  Add20Regular, 
+  Delete20Regular, 
+  DocumentMultiple20Regular,
+  Edit20Regular,
+  Checkmark20Regular
+} from '@fluentui/react-icons';
+
+interface DecksSidebarProps {
+  boardDecksData: Record<string, CardDeckData>;
+  selectedDeckId: string | null;
+  setSelectedDeckId: (id: string | null) => void;
+  onUpdateDecks: (decks: Record<string, CardDeckData>) => void;
+  setCardsSubTab: (tab: 'Decks' | 'Cards' | 'Layers') => void;
+}
+
+export const DecksSidebar: React.FC<DecksSidebarProps> = ({ 
+  boardDecksData, 
+  selectedDeckId, 
+  setSelectedDeckId, 
+  onUpdateDecks,
+  setCardsSubTab
+}) => {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newDeckName, setNewDeckName] = useState('');
+  const [deckToDelete, setDeckToDelete] = useState<string | null>(null);
+
+  const handleCreateDeck = () => {
+    if (!newDeckName.trim()) return;
+    const id = Date.now().toString();
+    const newDeck: CardDeckData = {
+      id,
+      name: newDeckName.trim(),
+      cards: {}
+    };
+    onUpdateDecks({ ...boardDecksData, [id]: newDeck });
+    setSelectedDeckId(id);
+    setCardsSubTab('Cards');
+    setIsCreateModalOpen(false);
+    setNewDeckName('');
+  };
+
+  const confirmDeleteDeck = () => {
+    if (!deckToDelete) return;
+    const newData = { ...boardDecksData };
+    delete newData[deckToDelete];
+    onUpdateDecks(newData);
+    if (selectedDeckId === deckToDelete) setSelectedDeckId(null);
+    setDeckToDelete(null);
+  };
+
+  const handleRenameSubmit = (id: string) => {
+    if (editName.trim()) {
+      onUpdateDecks({
+        ...boardDecksData,
+        [id]: { ...boardDecksData[id], name: editName.trim() }
+      });
+    }
+    setEditingId(null);
+  };
+
+  return (
+    <>
+      <div className="h-[56px] px-6 border-b border-meevo-border flex items-center justify-between shrink-0">
+        <h2 className="text-base font-medium text-meevo-text-primary">Decks</h2>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+        {Object.values(boardDecksData).map((deck) => (
+          <div 
+            key={deck.id}
+            onClick={() => {
+              setSelectedDeckId(deck.id);
+              setCardsSubTab('Cards');
+            }}
+            className={`group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors border ${
+              selectedDeckId === deck.id 
+                ? 'bg-meevo-surface-2 border-meevo-purple' 
+                : 'bg-meevo-surface-2/50 border-transparent hover:bg-meevo-surface-2 hover:border-[#CCCCCC]/20'
+            }`}
+          >
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="w-8 h-8 rounded bg-meevo-surface-2 flex items-center justify-center shrink-0 border border-meevo-border">
+                <DocumentMultiple20Regular className="text-meevo-purple" />
+              </div>
+              {editingId === deck.id ? (
+                <div className="flex items-center gap-2 w-full">
+                  <input
+                    type="text"
+                    value={editName}
+                    autoFocus
+                    onChange={(e) => setEditName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleRenameSubmit(deck.id);
+                      if (e.key === 'Escape') setEditingId(null);
+                    }}
+                    onBlur={() => handleRenameSubmit(deck.id)}
+                    className="bg-[#0A0A0C] border border-[#CCCCCC]/20 rounded px-2 py-1 text-sm text-meevo-text-primary outline-none w-full"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <button onClick={(e) => { e.stopPropagation(); handleRenameSubmit(deck.id); }} className="text-meevo-purple shrink-0">
+                    <Checkmark20Regular />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-sm font-medium text-meevo-text-primary truncate">{deck.name}</span>
+                  <span className="text-xs text-meevo-text-tertiary">{Object.keys(deck.cards).length} cards</span>
+                </div>
+              )}
+            </div>
+            {editingId !== deck.id && (
+              <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditName(deck.name);
+                    setEditingId(deck.id);
+                  }}
+                  className="w-8 h-8 flex items-center justify-center p-0 text-meevo-text-secondary hover:text-meevo-text-primary hover:bg-meevo-surface-0 rounded-md transition-colors"
+                >
+                  <Edit20Regular fontSize={14} />
+                </button>
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeckToDelete(deck.id);
+                  }}
+                  className="w-8 h-8 flex items-center justify-center p-0 text-meevo-text-secondary hover:text-red-400 hover:bg-red-400/10 rounded-md transition-colors"
+                >
+                  <Delete20Regular fontSize={14} />
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
+        {Object.keys(boardDecksData).length === 0 && (
+          <div className="text-center py-8">
+            <DocumentMultiple20Regular className="mx-auto text-[#CCCCCC]/20 mb-3" fontSize={32} />
+            <p className="text-sm text-meevo-text-secondary font-medium">No decks yet</p>
+            <p className="text-xs text-meevo-text-tertiary mt-1">Create your first deck to start adding cards.</p>
+          </div>
+        )}
+      </div>
+
+      <div className="p-4 border-t border-meevo-border shrink-0">
+        <button
+          onClick={() => {
+            setNewDeckName(`New Deck ${Object.keys(boardDecksData).length + 1}`);
+            setIsCreateModalOpen(true);
+          }}
+          className="w-full py-2 bg-meevo-purple text-white text-sm font-medium rounded-md hover:bg-meevo-purple-active transition-colors flex items-center justify-center gap-2"
+        >
+          <Add20Regular fontSize={16} />
+          Create Deck
+        </button>
+      </div>
+
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 bg-black/5 dark:bg-black/60 border border-meevo-border backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setIsCreateModalOpen(false)}>
+          <div className="bg-meevo-surface-2 border border-meevo-border rounded-xl p-6 w-[400px] shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-xl font-bold text-meevo-text-primary mb-4">Create New Deck</h3>
+            
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-meevo-text-secondary mb-2">Deck Name</label>
+              <input 
+                type="text" 
+                value={newDeckName}
+                onChange={e => setNewDeckName(e.target.value)}
+                autoFocus
+                className="w-full bg-[#0A0A0C] border border-[#CCCCCC]/20 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:border-meevo-purple focus:ring-1 focus:ring-meevo-purple"
+                placeholder="E.g., Event Cards"
+                onKeyDown={e => e.key === 'Enter' && handleCreateDeck()}
+              />
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setIsCreateModalOpen(false)}
+                className="px-4 py-2 text-sm font-medium text-meevo-text-secondary hover:text-meevo-text-primary transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleCreateDeck}
+                disabled={!newDeckName.trim()}
+                className="px-4 py-2 bg-meevo-purple text-white text-sm font-bold rounded-md hover:bg-meevo-purple-active transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ConfirmModal 
+        isOpen={!!deckToDelete}
+        onClose={() => setDeckToDelete(null)}
+        onConfirm={confirmDeleteDeck}
+        title="Delete Deck"
+        message={`Are you sure you want to delete this deck? All cards inside it will be lost. This action cannot be undone.`}
+        confirmText="Delete"
+      />
+    </>
+  );
+};

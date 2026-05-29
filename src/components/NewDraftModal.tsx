@@ -22,7 +22,7 @@ export const NewDraftModal: React.FC<NewDraftModalProps> = ({ isOpen, onClose, o
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#00000080] backdrop-blur-sm">
-      <div className="bg-meevo-panel border border-meevo-border rounded-md shadow-2xl w-full max-w-md p-6 relative">
+      <div className="bg-meevo-surface-1 border border-meevo-border rounded-md shadow-2xl w-full max-w-md p-6 relative">
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 text-meevo-text-tertiary hover:text-meevo-text-primary transition-colors"
@@ -44,7 +44,7 @@ export const NewDraftModal: React.FC<NewDraftModalProps> = ({ isOpen, onClose, o
               placeholder="e.g. My Awesome Board Game"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-[#1A1A1D] border border-meevo-border rounded-sm px-3 py-2 text-meevo-text-primary outline-none focus:border-meevo-purple transition-colors"
+              className="bg-meevo-surface-2 border border-meevo-border rounded-sm px-3 py-2 text-meevo-text-primary outline-none focus:border-meevo-purple transition-colors"
             />
           </div>
 
@@ -52,7 +52,7 @@ export const NewDraftModal: React.FC<NewDraftModalProps> = ({ isOpen, onClose, o
             <button 
               type="button" 
               onClick={onClose}
-              className="px-4 py-2 rounded-sm text-sm font-medium text-meevo-text-secondary hover:text-meevo-text-primary hover:bg-[#1A1A1D] transition-colors"
+              className="px-4 py-2 rounded-sm text-sm font-medium text-meevo-text-secondary hover:text-meevo-text-primary hover:bg-meevo-surface-2 transition-colors"
             >
               Cancel
             </button>

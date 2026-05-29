@@ -1,0 +1,258 @@
+import React, { useState } from 'react';
+import type { CardDeckData, CardData } from '../../services/storage/types';
+import { 
+  ArrowLeft20Regular,
+  Add20Regular,
+  Delete20Regular,
+  Document20Regular,
+  Checkmark20Regular,
+  Edit20Regular
+} from '@fluentui/react-icons';
+
+interface CardsSidebarProps {
+  boardDecksData: Record<string, CardDeckData>;
+  selectedDeckId: string | null;
+  selectedCardId: string | null;
+  setSelectedCardId: (id: string | null) => void;
+  onUpdateDecks: (decks: Record<string, CardDeckData>) => void;
+  setCardsSubTab: (tab: 'Decks' | 'Cards' | 'Layers') => void;
+}
+
+export const CardsSidebar: React.FC<CardsSidebarProps> = ({
+  boardDecksData,
+  selectedDeckId,
+  selectedCardId,
+  setSelectedCardId,
+  onUpdateDecks,
+  setCardsSubTab
+}) => {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
+
+  // Template Modal State
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [templateType, setTemplateType] = useState<'french' | 'spanish' | 'size'>('size');
+  const [newCardName, setNewCardName] = useState('');
+
+  if (!selectedDeckId || !boardDecksData[selectedDeckId]) {
+    return (
+      <div className="p-4 text-meevo-text-secondary">
+        <button onClick={() => setCardsSubTab('Decks')} className="flex items-center gap-2 mb-4 hover:text-white">
+          <ArrowLeft20Regular /> Back to Decks
+        </button>
+        No deck selected.
+      </div>
+    );
+  }
+
+  const deck = boardDecksData[selectedDeckId];
+
+  const handleCreateCard = (config: any) => {
+    const id = Date.now().toString();
+    const newCard: CardData = {
+      id,
+      deckId: selectedDeckId,
+      name: newCardName.trim() || `New Card ${Object.keys(deck.cards).length + 1}`,
+      width: config.width || 300,
+      height: config.height || 420,
+      rounded: config.rounded || 16,
+      templateConfig: {
+        type: templateType,
+        ...config
+      },
+      layers: [] // Layers would be generated here if needed
+    };
+
+    onUpdateDecks({
+      ...boardDecksData,
+      [selectedDeckId]: {
+        ...deck,
+        cards: { ...deck.cards, [id]: newCard }
+      }
+    });
+    setSelectedCardId(id);
+    setIsTemplateModalOpen(false);
+    setNewCardName('');
+  };
+
+  const handleDeleteCard = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    const newCards = { ...deck.cards };
+    delete newCards[id];
+    onUpdateDecks({
+      ...boardDecksData,
+      [selectedDeckId]: { ...deck, cards: newCards }
+    });
+    if (selectedCardId === id) setSelectedCardId(null);
+  };
+
+  const handleRenameSubmit = (id: string) => {
+    if (editName.trim()) {
+      onUpdateDecks({
+        ...boardDecksData,
+        [selectedDeckId]: {
+          ...deck,
+          cards: {
+            ...deck.cards,
+            [id]: { ...deck.cards[id], name: editName.trim() }
+          }
+        }
+      });
+    }
+    setEditingId(null);
+  };
+
+  return (
+    <>
+      <div className="py-4 px-6 border-b border-[#CCCCCC]/10 flex items-center gap-3 shrink-0">
+        <button 
+          onClick={() => setCardsSubTab('Decks')}
+          className="text-meevo-text-tertiary hover:text-meevo-text-primary transition-colors"
+        >
+          <ArrowLeft20Regular />
+        </button>
+        <h2 className="text-base font-medium text-meevo-text-primary truncate flex-1">{deck.name} Cards</h2>
+        <button 
+          onClick={() => {
+            setNewCardName(`New Card ${Object.keys(deck.cards).length + 1}`);
+            setIsTemplateModalOpen(true);
+          }}
+          className="w-8 h-8 flex items-center justify-center p-0 text-meevo-text-secondary hover:text-meevo-text-primary transition-colors bg-[#1A1A1D] rounded-md hover:bg-[#2A2A2D]"
+          title="Create new card"
+        >
+          <Add20Regular />
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+        {Object.values(deck.cards).map((card) => (
+          <div 
+            key={card.id}
+            onClick={() => setSelectedCardId(card.id)}
+            className={`group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors border ${
+              selectedCardId === card.id 
+                ? 'bg-[#1A1A1D] border-meevo-purple' 
+                : 'bg-[#1A1A1D]/50 border-transparent hover:bg-[#1A1A1D] hover:border-[#CCCCCC]/20'
+            }`}
+          >
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="w-8 h-8 rounded bg-[#0A0A0C] flex items-center justify-center shrink-0 border border-[#CCCCCC]/10">
+                <Document20Regular className="text-meevo-purple" />
+              </div>
+              {editingId === card.id ? (
+                <div className="flex items-center gap-2 w-full">
+                  <input
+                    type="text"
+                    value={editName}
+                    autoFocus
+                    onChange={(e) => setEditName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleRenameSubmit(card.id);
+                      if (e.key === 'Escape') setEditingId(null);
+                    }}
+                    onBlur={() => handleRenameSubmit(card.id)}
+                    className="bg-[#0A0A0C] border border-[#CCCCCC]/20 rounded px-2 py-1 text-sm text-meevo-text-primary outline-none w-full"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <button onClick={(e) => { e.stopPropagation(); handleRenameSubmit(card.id); }} className="text-meevo-purple shrink-0">
+                    <Checkmark20Regular />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-sm font-medium text-meevo-text-primary truncate">{card.name}</span>
+                  <span className="text-xs text-meevo-text-tertiary capitalize">{card.templateConfig.type} Template</span>
+                </div>
+              )}
+            </div>
+            {editingId !== card.id && (
+              <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditName(card.name);
+                    setEditingId(card.id);
+                  }}
+                  className="w-8 h-8 flex items-center justify-center p-0 text-meevo-text-secondary hover:text-meevo-text-primary hover:bg-[#2A2A2D] rounded-md transition-colors"
+                >
+                  <Edit20Regular fontSize={14} />
+                </button>
+                <button 
+                  onClick={(e) => handleDeleteCard(e, card.id)}
+                  className="w-8 h-8 flex items-center justify-center p-0 text-meevo-text-secondary hover:text-red-400 hover:bg-red-400/10 rounded-md transition-colors"
+                >
+                  <Delete20Regular fontSize={14} />
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
+        {Object.keys(deck.cards).length === 0 && (
+          <div className="text-center py-8">
+            <Document20Regular className="mx-auto text-[#CCCCCC]/20 mb-3" fontSize={32} />
+            <p className="text-sm text-meevo-text-secondary font-medium">No cards yet</p>
+          </div>
+        )}
+      </div>
+
+      {isTemplateModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setIsTemplateModalOpen(false)}>
+          <div className="bg-[#1A1A1D] border border-[#CCCCCC]/10 rounded-xl p-6 w-[400px] shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-xl font-bold text-meevo-text-primary mb-4">Create New Card</h3>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-meevo-text-secondary mb-2">Card Name</label>
+              <input 
+                type="text" 
+                value={newCardName}
+                onChange={e => setNewCardName(e.target.value)}
+                autoFocus
+                className="w-full bg-[#0A0A0C] border border-[#CCCCCC]/20 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:border-meevo-purple focus:ring-1 focus:ring-meevo-purple"
+                placeholder="E.g., King of Spades"
+              />
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-meevo-text-secondary mb-2">Template</label>
+              <select 
+                value={templateType}
+                onChange={(e) => setTemplateType(e.target.value as any)}
+                className="w-full bg-[#0A0A0C] border border-[#CCCCCC]/20 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:border-meevo-purple"
+              >
+                <option value="size">Blank / Custom Size</option>
+                <option value="french">French (Poker)</option>
+                <option value="spanish">Spanish</option>
+              </select>
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setIsTemplateModalOpen(false)}
+                className="px-4 py-2 text-sm font-medium text-meevo-text-secondary hover:text-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  if (!newCardName.trim()) return;
+                  if (templateType === 'size') {
+                    handleCreateCard({ width: 300, height: 420, rounded: 16 });
+                  } else if (templateType === 'french') {
+                    handleCreateCard({ width: 300, height: 420, rounded: 16, rank: 'A', suit: 'spades', textColor: '#000000' });
+                  } else {
+                    handleCreateCard({ width: 300, height: 420, rounded: 16, rank: '1', suit: 'swords', textColor: '#000000' });
+                  }
+                }}
+                disabled={!newCardName.trim()}
+                className="px-4 py-2 bg-meevo-purple text-white text-sm font-bold rounded-md hover:bg-meevo-purple/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ComponentType } from '../../pages/Editor';
-import { ChevronDown20Regular } from '@fluentui/react-icons';
+import { ChevronDown20Regular, Save20Regular } from '@fluentui/react-icons';
 import { useState } from 'react';
 
 interface ComponentsSidebarProps {
@@ -36,7 +36,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName,
   return (
     <>
       {/* Title */}
-      <div className="py-4 px-6 border-b border-[#CCCCCC]/10 shrink-0">
+      <div className="h-[56px] px-6 border-b border-meevo-border flex items-center shrink-0">
         <h2 className="text-base font-medium text-meevo-text-primary">Components</h2>
       </div>
 
@@ -50,7 +50,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName,
             type="text" 
             defaultValue={draftName}
             placeholder="My Board Game"
-            className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+            className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
           />
         </div>
 
@@ -60,13 +60,13 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName,
             Gender
           </label>
           <div 
-            className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 min-h-[38px] flex items-center justify-between cursor-pointer focus-within:ring-1 focus-within:ring-meevo-purple"
+            className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 min-h-[38px] flex items-center justify-between cursor-pointer focus-within:ring-1 focus-within:ring-meevo-purple"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <div className="flex flex-wrap gap-2">
               {(!genders || genders.length === 0) && <span className="text-meevo-text-tertiary text-sm">Select genders...</span>}
               {genders?.map(g => (
-                <span key={g} className="bg-[#070709] text-meevo-text-primary text-xs px-2 py-1 rounded-sm">
+                <span key={g} className="bg-meevo-surface-2 text-meevo-text-primary text-xs px-2 py-1 rounded-sm">
                   {g}
                 </span>
               ))}
@@ -76,14 +76,14 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName,
 
           {/* Dropdown Menu */}
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 w-full mt-1 bg-[#1A1A1D] border border-[#CCCCCC]/10 rounded-sm shadow-xl z-20 py-2">
+            <div className="absolute top-full left-0 w-full mt-1 bg-meevo-surface-2 border border-meevo-border rounded-sm shadow-xl z-20 py-2">
               {GENRES.map(genre => (
-                <label key={genre} className="flex items-center gap-3 px-3 py-2 hover:bg-[#070709] cursor-pointer text-sm text-meevo-text-primary">
+                <label key={genre} className="flex items-center gap-3 px-3 py-2 hover:bg-meevo-surface-2 cursor-pointer text-sm text-meevo-text-primary">
                   <input 
                     type="checkbox" 
                     checked={genders?.includes(genre) || false}
                     onChange={() => toggleGender(genre)}
-                    className="accent-meevo-purple bg-[#070709] border-[#CCCCCC]/10 rounded-sm"
+                    className="accent-meevo-purple bg-meevo-surface-2 border-meevo-border rounded-sm"
                   />
                   {genre}
                 </label>
@@ -101,12 +101,12 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName,
             <input 
               type="number" 
               placeholder="Min"
-              className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+              className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
             />
             <input 
               type="number" 
               placeholder="Max"
-              className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+              className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
             />
           </div>
         </div>
@@ -123,8 +123,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName,
                 <div 
                   key={comp}
                   onClick={() => onToggleComponent(comp)}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-md cursor-pointer transition-colors"
-                  style={{ backgroundColor: isActive ? '#152717' : 'transparent' }}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-md cursor-pointer transition-colors ${isActive ? 'bg-meevo-surface-5' : 'bg-transparent'}`}
                 >
                   <div 
                     className="w-3.5 h-3.5 shrink-0" 
@@ -145,11 +144,12 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ draftName,
       </div>
 
       {/* Footer */}
-      <div className="p-6 flex justify-end bg-meevo-panel shrink-0">
+      <div className="p-4 border-t border-meevo-border shrink-0">
         <button 
           onClick={onSave}
-          className="px-5 py-2.5 bg-meevo-text-primary text-meevo-text-inverse rounded-md text-sm font-medium hover:bg-meevo-text-secondary transition-colors"
+          className="w-full py-2 bg-meevo-purple text-white text-sm font-medium rounded-md hover:bg-meevo-purple-active transition-colors flex items-center justify-center gap-2"
         >
+          <Save20Regular fontSize={16} />
           Save Components
         </button>
       </div>

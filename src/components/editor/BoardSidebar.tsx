@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import type { BoardConfig } from '../../services/storage/types';
-import { ChevronDown20Regular } from '@fluentui/react-icons';
+import { ChevronDown20Regular, Add20Regular, Save20Regular } from '@fluentui/react-icons';
 
 interface BoardSidebarProps {
   initialConfig?: BoardConfig;
   onSave: (config: BoardConfig) => void;
+  onDeleteBoard?: () => void;
 }
 
 const PATH_SHAPES: BoardConfig['pathShape'][] = ['Square', 'Circle', 'Pentagon', 'Hexagon', 'Snake', 'Grid', 'Spiral', 'Free Paths'];
@@ -28,14 +29,14 @@ const SpiralIcon = ({ dir }: { dir: string }) => {
   );
 };
 
-export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSave }) => {
+export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSave, onDeleteBoard }) => {
   const [boardType, setBoardType] = useState<BoardConfig['type']>(initialConfig?.type || 'Fixed Path');
   
   const [pathShape, setPathShape] = useState<BoardConfig['pathShape']>(initialConfig?.pathShape || 'Square');
   const [tileCount, setTileCount] = useState<number>(initialConfig?.tileCount || 40);
-  const [tileWidth, setTileWidth] = useState<number>(initialConfig?.tileWidth || 60);
-  const [tileHeight, setTileHeight] = useState<number>(initialConfig?.tileHeight || 60);
-  const [gap, setGap] = useState<number>(initialConfig?.gap || 10);
+  const [tileWidth, setTileWidth] = useState<number>(initialConfig?.tileWidth || 350);
+  const [tileHeight, setTileHeight] = useState<number>(initialConfig?.tileHeight || 350);
+  const [gap, setGap] = useState<number>(initialConfig?.gap || 30);
   const [gridColumns, setGridColumns] = useState<number>(initialConfig?.gridColumns || 8);
   const [gridRows, setGridRows] = useState<number>(initialConfig?.gridRows || 8);
   const [gapLine, setGapLine] = useState<number>(initialConfig?.gapLine || 1);
@@ -75,13 +76,13 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
   }
 
   const handleSave = () => {
-    onSave({ type: boardType, pathShape, tileCount, tileWidth, tileHeight, gap, gridColumns, gridRows, gapLine, spiralDirection, spiralRounded, connectEnd });
+    onSave({ ...initialConfig, type: boardType, pathShape, tileCount, tileWidth, tileHeight, gap, gridColumns, gridRows, gapLine, spiralDirection, spiralRounded, connectEnd } as BoardConfig);
   };
 
   return (
     <>
       {/* Title */}
-      <div className="py-4 px-6 border-b border-[#CCCCCC]/10 shrink-0">
+      <div className="h-[56px] px-6 border-b border-meevo-border flex items-center shrink-0">
         <h2 className="text-base font-medium text-meevo-text-primary">Board</h2>
       </div>
 
@@ -96,8 +97,8 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
               onClick={() => setBoardType('Fixed Path')}
               className={`flex-1 flex flex-col items-start p-3 rounded-md border transition-colors ${
                 boardType === 'Fixed Path' 
-                  ? 'bg-[#141E17] border-[#5BB661]' 
-                  : 'bg-[#1A1A1D] border-[#CCCCCC]/10 hover:border-meevo-purple'
+                  ? 'bg-[#5BB661]/10 bg-meevo-surface-5 border-[#5BB661]' 
+                  : 'bg-meevo-surface-2 border-meevo-border hover:border-meevo-purple'
               }`}
             >
               <span className="text-sm font-medium text-meevo-text-primary mb-1">Fixed Path</span>
@@ -108,8 +109,8 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
               onClick={() => setBoardType('Modular')}
               className={`flex-1 flex flex-col items-start p-3 rounded-md border transition-colors ${
                 boardType === 'Modular' 
-                  ? 'bg-[#141E17] border-[#5BB661]' 
-                  : 'bg-[#1A1A1D] border-[#CCCCCC]/10 hover:border-meevo-purple'
+                  ? 'bg-[#5BB661]/10 bg-meevo-surface-5 border-[#5BB661]' 
+                  : 'bg-meevo-surface-2 border-meevo-border hover:border-meevo-purple'
               }`}
             >
               <span className="text-sm font-medium text-meevo-text-primary mb-1">Modular</span>
@@ -127,7 +128,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
             Path Shape
           </label>
           <div 
-            className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 min-h-[38px] flex items-center justify-between cursor-pointer focus-within:ring-1 focus-within:ring-meevo-purple"
+            className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 min-h-[38px] flex items-center justify-between cursor-pointer focus-within:ring-1 focus-within:ring-meevo-purple"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <span className="text-sm text-meevo-text-primary">{pathShape}</span>
@@ -135,7 +136,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
           </div>
 
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 w-full mt-1 bg-[#1A1A1D] border border-[#CCCCCC]/10 rounded-sm shadow-xl z-20 py-2">
+            <div className="absolute top-full left-0 w-full mt-1 bg-meevo-surface-2 border border-meevo-border rounded-sm shadow-xl z-20 py-2">
               {PATH_SHAPES.map(shape => (
                 <button 
                   key={shape}
@@ -143,7 +144,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
                     setPathShape(shape);
                     setIsDropdownOpen(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-sm text-meevo-text-primary hover:bg-[#070709] transition-colors"
+                  className="w-full text-left px-4 py-2 text-sm text-meevo-text-primary hover:bg-meevo-surface-2 transition-colors"
                 >
                   {shape}
                 </button>
@@ -163,7 +164,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
                 type="number" 
                 value={gridColumns}
                 onChange={(e) => setGridColumns(Math.max(1, parseInt(e.target.value) || 1))}
-                className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+                className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
               />
             </div>
             <div className="flex-1">
@@ -174,7 +175,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
                 type="number" 
                 value={gridRows}
                 onChange={(e) => setGridRows(Math.max(1, parseInt(e.target.value) || 1))}
-                className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+                className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
               />
             </div>
           </div>
@@ -188,7 +189,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
               value={tileCount}
               onChange={(e) => setTileCount(parseInt(e.target.value) || 0)}
               placeholder="20, 30, 40..."
-              className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors mb-2"
+              className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors mb-2"
             />
             {showWarning && (
               <div className="bg-[#2A2100] border border-[#403100] rounded-md p-2 text-xs text-[#F0B100] leading-snug">
@@ -208,7 +209,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
               type="number" 
               value={tileWidth}
               onChange={(e) => setTileWidth(parseInt(e.target.value) || 0)}
-              className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+              className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
             />
           </div>
           <div className="flex-1">
@@ -219,7 +220,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
               type="number" 
               value={tileHeight}
               onChange={(e) => setTileHeight(parseInt(e.target.value) || 0)}
-              className={`w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 transition-colors ${
+              className={`w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 transition-colors ${
                 maxHeightWarning ? 'border border-[#F0B100] focus:ring-[#F0B100]' : 'focus:ring-meevo-purple'
               }`}
             />
@@ -245,7 +246,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
                   type="number" 
                   value={gap}
                   onChange={(e) => setGap(parseInt(e.target.value) || 0)}
-                  className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+                  className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
                 />
               </div>
               <div className="flex-1">
@@ -257,7 +258,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
                   value={gapLine}
                   min={1}
                   onChange={(e) => setGapLine(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+                  className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
                 />
               </div>
             </div>
@@ -276,7 +277,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
                       className={`flex-1 flex justify-center items-center h-12 rounded-md border transition-colors ${
                         spiralDirection === dir 
                           ? 'bg-[#141E17] border-[#5BB661] text-meevo-text-primary' 
-                          : 'bg-[#1A1A1D] border-[#CCCCCC]/10 text-meevo-text-tertiary hover:border-meevo-purple'
+                          : 'bg-meevo-surface-2 border-meevo-border text-meevo-text-tertiary hover:border-meevo-purple'
                       }`}
                     >
                       <SpiralIcon dir={dir} />
@@ -291,7 +292,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
                       className={`flex-1 flex justify-center items-center h-12 rounded-md border transition-colors ${
                         spiralDirection === dir 
                           ? 'bg-[#141E17] border-[#5BB661] text-meevo-text-primary' 
-                          : 'bg-[#1A1A1D] border-[#CCCCCC]/10 text-meevo-text-tertiary hover:border-meevo-purple'
+                          : 'bg-meevo-surface-2 border-meevo-border text-meevo-text-tertiary hover:border-meevo-purple'
                       }`}
                     >
                       <SpiralIcon dir={dir} />
@@ -309,7 +310,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
               <button
                 onClick={() => setSpiralRounded(!spiralRounded)}
                 className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                  spiralRounded ? 'bg-meevo-purple' : 'bg-[#1A1A1D] border border-[#CCCCCC]/10'
+                  spiralRounded ? 'bg-meevo-purple' : 'bg-meevo-surface-2 border border-meevo-border'
                 }`}
               >
                 <span
@@ -331,7 +332,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
                   type="number" 
                   value={gap}
                   onChange={(e) => setGap(parseInt(e.target.value) || 0)}
-                  className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
+                  className="w-full bg-meevo-surface-2 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple transition-colors"
                 />
               </div>
             )}
@@ -344,7 +345,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
                 <button
                   onClick={() => setConnectEnd(!connectEnd)}
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                    connectEnd ? 'bg-meevo-purple' : 'bg-[#1A1A1D] border border-[#CCCCCC]/10'
+                    connectEnd ? 'bg-meevo-purple' : 'bg-meevo-surface-2 border border-meevo-border'
                   }`}
                 >
                   <span
@@ -360,14 +361,22 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({ initialConfig, onSav
 
       </div>
 
-      {/* Footer */}
-      <div className="p-6 flex justify-end bg-meevo-panel shrink-0">
+      <div className="p-4 border-t border-meevo-border shrink-0 flex flex-col gap-3">
         <button 
           onClick={handleSave}
-          className="px-5 py-2.5 bg-meevo-text-primary text-meevo-text-inverse rounded-md text-sm font-medium hover:bg-meevo-text-secondary transition-colors"
+          className="w-full py-2 bg-meevo-purple text-white text-sm font-medium rounded-md hover:bg-meevo-purple-active transition-colors flex items-center justify-center gap-2"
         >
-          Create Board
+          {initialConfig?.type ? <Save20Regular fontSize={16} /> : <Add20Regular fontSize={16} />}
+          {initialConfig?.type ? 'Save Board' : 'Create Board'}
         </button>
+        {initialConfig?.type && (
+          <button 
+            onClick={() => onDeleteBoard?.()}
+            className="w-full bg-[rgba(0,0,0,0.05)] border border-red-500/30 text-red-500 py-2 rounded-md text-sm font-medium hover:bg-red-500/10 transition-colors"
+          >
+            Delete Board
+          </button>
+        )}
       </div>
     </>
   );

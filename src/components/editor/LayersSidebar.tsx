@@ -24,6 +24,9 @@ interface LayersSidebarProps {
   onSelectLayer: (layerIds: string[], multi?: boolean) => void;
   boardTileComponents?: import('../../services/storage/types').BoardTileComponent[];
   onUpdateComponents?: (newComponents: import('../../services/storage/types').BoardTileComponent[], newTilesData?: Record<number, BoardTileData>) => void;
+  isCardMode?: boolean;
+  layerSourceTitle?: string;
+  onRenameSource?: (newName: string) => void;
 }
 
 const getLayerIcon = (type: LayerData['type']) => {
@@ -42,17 +45,25 @@ export const LayersSidebar: React.FC<LayersSidebarProps> = ({
   selectedLayerIds,
   onSelectLayer,
   boardTileComponents = [],
-  onUpdateComponents
+  onUpdateComponents,
+  isCardMode = false,
+  layerSourceTitle,
+  onRenameSource
 }) => {
   const { addNotification } = useNotification();
-  const [editingLayerId, setEditingLayerId] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState('');
+  const [draggedLayerId, setDraggedLayerId] = React.useState<string | null>(null);
+  const [editingLayerId, setEditingLayerId] = React.useState<string | null>(null);
+  const [editValue, setEditValue] = React.useState('');
+  const [editingSource, setEditingSource] = React.useState(false);
+  const [sourceEditValue, setSourceEditValue] = React.useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
   if (selectedTileIds.length !== 1) {
     return (
-      <div className="flex flex-col h-full bg-meevo-panel p-6">
-        <h2 className="text-xs font-bold text-meevo-text-secondary tracking-wider mb-8 uppercase">Layers</h2>
+      <div className="flex flex-col h-full bg-meevo-surface-1 p-6">
+        <div className="h-[56px] px-6 border-b border-meevo-border flex items-center shrink-0 -mx-6 -mt-6 mb-6">
+          <h2 className="text-base font-medium text-meevo-text-primary">Layers</h2>
+        </div>
         <div className="flex-1 flex items-center justify-center text-center">
           <p className="text-sm text-meevo-text-tertiary">Select a single tile to view its layers.</p>
         </div>
@@ -203,7 +214,7 @@ export const LayersSidebar: React.FC<LayersSidebarProps> = ({
     addNotification({
       type: 'success',
       layout: 'simple',
-      title: 'Component updated on all tiles'
+      title: 'Template updated on all tiles'
     });
   };
 
@@ -234,21 +245,50 @@ export const LayersSidebar: React.FC<LayersSidebarProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-meevo-panel">
-      <div className="p-6 pb-2 shrink-0">
-        <h2 className="text-xs font-bold text-meevo-text-secondary tracking-wider uppercase">Layers</h2>
+    <div className="flex flex-col h-full bg-meevo-surface-1">
+      <div className="h-[56px] px-6 border-b border-meevo-border flex items-center shrink-0">
+        <h2 className="text-base font-medium text-meevo-text-primary">Layers</h2>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-2">
-        {/* Tile Root */}
-        <div 
-          className={`flex items-center gap-2 px-2 py-1.5 mb-2 cursor-pointer rounded-md transition-colors ${selectedLayerIds.length === 0 ? 'bg-[#1A1A1D] border border-[#333]' : 'hover:bg-[#1A1A1D]/50 border border-transparent'}`}
-          onClick={() => onSelectLayer([])}
-        >
-          <Folder20Regular fontSize={14} className="text-meevo-text-primary" />
-          <span className="text-sm font-medium text-meevo-text-primary">
-            Casilla-{primaryTileId.toString().padStart(2, '0')}
-          </span>
+        {/* Tile/Card Container as a pseudo folder */}
+        <div>
+          <div 
+            className={`flex items-center gap-2 px-2 py-1.5 mb-2 cursor-pointer rounded-md transition-colors ${selectedLayerIds.length === 0 ? 'bg-meevo-surface-2 border border-meevo-border' : 'hover:bg-meevo-surface-2/50 border border-transparent'}`}
+            onClick={() => onSelectLayer([])}
+            onDoubleClick={(e) => {
+              if (isCardMode && onRenameSource) {
+                e.stopPropagation();
+                setEditingSource(true);
+                setSourceEditValue(layerSourceTitle || `Casilla-${primaryTileId.toString().padStart(2, '0')}`);
+              }
+            }}
+          >
+            <Folder20Regular fontSize={14} className="text-meevo-text-primary" />
+            {editingSource ? (
+              <input
+                type="text"
+                value={sourceEditValue}
+                autoFocus
+                onChange={(e) => setSourceEditValue(e.target.value)}
+                onBlur={() => {
+                  if (onRenameSource) onRenameSource(sourceEditValue);
+                  setEditingSource(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (onRenameSource) onRenameSource(sourceEditValue);
+                    setEditingSource(false);
+                  }
+                }}
+                className="bg-transparent text-sm font-medium text-meevo-text-primary outline-none w-full"
+              />
+            ) : (
+              <span className="text-sm font-medium text-meevo-text-primary">
+                {isCardMode && layerSourceTitle ? layerSourceTitle : `Casilla-${primaryTileId.toString().padStart(2, '0')}`}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Layer List */}
@@ -263,7 +303,7 @@ export const LayersSidebar: React.FC<LayersSidebarProps> = ({
               onClick={(e) => handleSelectLayer(e, layer.id)}
               onDoubleClick={(e) => handleDoubleClick(e, layer)}
               className={`flex items-center gap-3 px-3 py-1.5 ml-4 rounded-md cursor-pointer transition-colors ${
-                selectedLayerIds.includes(layer.id) ? 'bg-[#1A1A1D] border border-[#333]' : 'hover:bg-[#1A1A1D]/50 border border-transparent'
+                selectedLayerIds.includes(layer.id) ? 'bg-meevo-surface-2 border border-meevo-border' : 'hover:bg-meevo-surface-2/50 border border-transparent'
               }`}
             >
               <div className="shrink-0">{getLayerIcon(layer.type)}</div>
@@ -292,39 +332,39 @@ export const LayersSidebar: React.FC<LayersSidebarProps> = ({
       </div>
 
       {/* Convert to Component Buttons */}
-      <div className="p-4 shrink-0 border-t border-[#CCCCCC]/10 space-y-2">
+      <div className="p-4 shrink-0 border-t border-meevo-border space-y-2">
         {tileData.componentId ? (
           <>
             <button 
               onClick={handleUpdateComponent}
-              className="w-full flex items-center justify-center gap-2 bg-[#1A1A1D] hover:bg-[#2A2A2D] text-meevo-purple py-2 rounded-md transition-colors text-sm font-medium border border-meevo-purple/50"
+              className="w-full flex items-center justify-center gap-2 bg-meevo-surface-2 hover:bg-meevo-surface-0 text-meevo-purple py-2 rounded-md transition-colors text-sm font-medium border border-meevo-purple/50"
             >
               <Star20Regular fontSize={16} />
-              Update Component
+              Update Template
             </button>
             <button 
               onClick={handleDisconnectComponent}
               className="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-red-500/10 text-red-400 py-2 rounded-md transition-colors text-sm font-medium border border-red-500/20"
             >
               <Dismiss20Regular fontSize={16} />
-              Disconnect Component
+              Disconnect Template
             </button>
           </>
         ) : (
           <>
             <button 
               onClick={() => setShowCreateModal(true)}
-              className="w-full flex items-center justify-center gap-2 bg-[#1A1A1D] hover:bg-[#2A2A2D] text-meevo-text-primary py-2 rounded-md transition-colors text-sm font-medium border border-[#333]"
+              className="w-full flex items-center justify-center gap-2 bg-meevo-surface-2 hover:bg-meevo-surface-0 text-meevo-text-primary py-2 rounded-md transition-colors text-sm font-medium border border-meevo-border"
             >
               <Star20Regular fontSize={16} />
-              Convert to Component
+              Convert to Template
             </button>
             <button 
               onClick={() => setShowConnectModal(true)}
-              className="w-full flex items-center justify-center gap-2 bg-[#1A1A1D] hover:bg-[#2A2A2D] text-meevo-text-primary py-2 rounded-md transition-colors text-sm font-medium border border-[#333]"
+              className="w-full flex items-center justify-center gap-2 bg-meevo-surface-2 hover:bg-meevo-surface-0 text-meevo-text-primary py-2 rounded-md transition-colors text-sm font-medium border border-meevo-border"
             >
               <Link20Regular fontSize={16} />
-              Connect Component
+              Connect Template
             </button>
           </>
         )}
@@ -347,3 +387,4 @@ export const LayersSidebar: React.FC<LayersSidebarProps> = ({
     </div>
   );
 };
+

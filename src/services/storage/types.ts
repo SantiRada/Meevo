@@ -23,6 +23,10 @@ export interface BoardConfig {
   };
   boardX?: number;
   boardY?: number;
+  dicesConfig?: {
+    x: number;
+    y: number;
+  };
 }
 
 export type TilePropertyType = 'Number' | 'Text' | 'List' | 'Color';
@@ -64,6 +68,11 @@ export interface LayerData {
   height: number;
   rotation: number;
   opacity: number;
+  rounded?: number;
+  roundedTL?: number;
+  roundedTR?: number;
+  roundedBL?: number;
+  roundedBR?: number;
   
   // Fill & Stroke
   fillColor?: string;
@@ -134,6 +143,74 @@ export interface BoardTileData {
   componentId?: string;
 }
 
+export interface CardTemplateConfig {
+  type: 'french' | 'spanish' | 'size';
+  rank?: string;
+  suit?: string;
+  textColor?: string;
+  fontFamily?: string;
+  imageSrc?: string;
+  imageX?: number;
+  imageY?: number;
+  imageWidth?: number;
+  imageHeight?: number;
+}
+
+export interface CardData {
+  id: string;
+  deckId: string;
+  name: string;
+  x?: number;
+  y?: number;
+  width: number;
+  height: number;
+  padding?: number;
+  fillColor?: string;
+  strokeColor?: string;
+  strokeWidth?: number;
+  rounded: number;
+  roundedTL?: number;
+  roundedTR?: number;
+  roundedBL?: number;
+  roundedBR?: number;
+  templateConfig: CardTemplateConfig;
+  clipOutsideOpacity?: number;
+  layers: LayerData[];
+}
+
+export interface CardDeckData {
+  id: string;
+  name: string;
+  cards: Record<string, CardData>;
+  x?: number;
+  y?: number;
+}
+
+export interface DiceFaceConfig {
+  text?: string;
+  imageSrc?: string;
+  imageScale?: number;
+  backgroundColor?: string;
+  contentColor?: string;
+}
+
+export interface DiceData {
+  id: string;
+  name: string;
+  sides: number;
+  template: 'Dots' | 'Numbers' | 'Images';
+  fontFamily?: string;
+  fontSize?: number;
+  startNumber: number;
+  stepDistance: number;
+  baseColor: string;
+  pipColor: string;
+  edgeColor?: string;
+  edgeSize?: number;
+  rounded: number;
+  faces: Record<number, DiceFaceConfig>;
+}
+
 export interface DraftMetadata {
   name: string;
   tiles: number;
@@ -147,6 +224,8 @@ export interface DraftMetadata {
   boardVariables?: BoardTileVariable[];
   boardTilesData?: Record<number, BoardTileData>;
   boardTileComponents?: BoardTileComponent[];
+  boardDicesData?: Record<string, DiceData>;
+  boardDecksData?: Record<string, CardDeckData>;
 }
 
 export interface StorageProvider {
@@ -169,3 +248,5 @@ export interface StorageProvider {
   verifyAndRestoreDraft(name: string): Promise<boolean>;
   syncDraftFolders(name: string, activeComponents: string[]): Promise<boolean>;
 }
+
+export interface CanvasSettings { fill: string; snapToGrid: boolean; viewGrid: boolean; gridOpacity?: number; gridOpacityCards?: number; }

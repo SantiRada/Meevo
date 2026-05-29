@@ -30,12 +30,12 @@ export const ImageFillModal: React.FC<ImageFillModalProps> = ({ layer, x, y, onC
   return (
     <div 
       ref={modalRef}
-      className="fixed z-50 bg-[#1A1A1D] border border-[#333] rounded-lg shadow-2xl p-4 flex flex-col gap-4"
+      className="fixed z-50 bg-meevo-surface-2 border border-meevo-border rounded-lg shadow-2xl p-4 flex flex-col gap-4"
       style={{ left: x, top: y, width: 240 }}
     >
       <div className="flex items-center gap-2 relative">
         <div 
-          className="flex-1 bg-[#0D0D0F] border border-[#333] rounded-md px-3 py-2 flex items-center justify-between cursor-pointer"
+          className="flex-1 bg-meevo-surface-1 border border-meevo-border rounded-md px-3 py-2 flex items-center justify-between cursor-pointer"
           onClick={() => setDropdownOpen(!dropdownOpen)}
         >
           <span className="text-sm text-meevo-text-primary capitalize">{currentMode}</span>
@@ -61,7 +61,7 @@ export const ImageFillModal: React.FC<ImageFillModalProps> = ({ layer, x, y, onC
       </div>
 
       {currentMode === 'tile' && (
-        <div className="flex items-center gap-2 bg-[#0D0D0F] border border-[#333] rounded-md px-3 py-1.5 focus-within:ring-1 focus-within:ring-meevo-purple">
+        <div className="flex items-center gap-2 bg-meevo-surface-1 border border-meevo-border rounded-md px-3 py-1.5 focus-within:ring-1 focus-within:ring-meevo-purple">
           <span className="text-xs text-meevo-text-tertiary">Size</span>
           <input 
             type="number" 
@@ -74,9 +74,34 @@ export const ImageFillModal: React.FC<ImageFillModalProps> = ({ layer, x, y, onC
         </div>
       )}
 
-      <div className="w-full aspect-square bg-[#0D0D0F] border border-[#333] rounded-md overflow-hidden relative flex items-center justify-center">
+      <div className="w-full aspect-square bg-meevo-surface-1 border border-meevo-border rounded-md overflow-hidden relative flex flex-col items-center justify-center">
         {!layer.src ? (
-          <Image20Regular className="text-[#444] text-4xl" />
+          <>
+            <Image20Regular className="text-[#444] text-4xl mb-3" />
+            <button 
+              onClick={() => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = (ev) => {
+                  const file = (ev.target as HTMLInputElement).files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      if (event.target?.result) {
+                        onChange({ src: event.target.result as string });
+                      }
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                };
+                input.click();
+              }}
+              className="px-4 py-2 bg-[#2A2A2D] hover:bg-[#3A3A3D] text-meevo-text-primary text-xs font-medium rounded-md transition-colors"
+            >
+              Import Image
+            </button>
+          </>
         ) : (
           <div style={{
             width: '100%',

@@ -29,7 +29,7 @@ export const DraftCard: React.FC<DraftCardProps> = ({
   return (
     <div 
       className={twMerge(
-        "bg-meevo-panel rounded-md border border-meevo-border p-6",
+        "bg-meevo-surface-1 rounded-md border border-meevo-border p-6",
         "hover:border-meevo-text-secondary transition-colors duration-200 cursor-pointer",
         "flex flex-col gap-4 relative group",
         className
@@ -38,7 +38,7 @@ export const DraftCard: React.FC<DraftCardProps> = ({
     >
       {/* Header */}
       <div className="flex gap-4">
-        <div className="w-12 h-12 rounded-sm bg-[#1A1A1D] flex-center text-meevo-text-secondary shrink-0">
+        <div className="w-12 h-12 rounded-sm bg-meevo-surface-2 flex-center text-meevo-text-secondary shrink-0">
           <Grid24Regular />
         </div>
         <div className="flex flex-col justify-center">
@@ -51,7 +51,7 @@ export const DraftCard: React.FC<DraftCardProps> = ({
 
       {/* Badges */}
       <div>
-        <span className="inline-block bg-[#1A1A1D] text-meevo-text-secondary text-xs px-2 py-1 rounded-sm border border-meevo-border">
+        <span className="inline-block bg-meevo-surface-2 text-meevo-text-secondary text-xs px-2 py-1 rounded-sm border border-meevo-border">
           {emptyTiles} empty
         </span>
       </div>
@@ -91,3 +91,4 @@ export const DraftCard: React.FC<DraftCardProps> = ({
     </div>
   );
 };
+

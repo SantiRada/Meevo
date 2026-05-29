@@ -15,14 +15,14 @@ export const CreateComponentModal: React.FC<CreateComponentModalProps> = ({ onCl
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-[#0C0C0E] border border-[#CCCCCC]/10 rounded-lg shadow-2xl w-[400px] flex flex-col max-h-[80vh]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="bg-meevo-surface-6 border border-meevo-border rounded-lg shadow-2xl w-[400px] flex flex-col max-h-[80vh]">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#CCCCCC]/10 shrink-0">
+        <div className="flex items-center justify-between p-6 border-b border-meevo-border shrink-0">
           <h2 className="text-lg font-medium text-meevo-text-primary">Create Component</h2>
           <button 
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-md border border-[#333333] hover:bg-[#1A1A1D] text-meevo-text-primary transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-md border border-meevo-border hover:bg-meevo-surface-2 text-meevo-text-primary transition-colors"
           >
             <Dismiss20Regular />
           </button>
@@ -39,7 +39,7 @@ export const CreateComponentModal: React.FC<CreateComponentModalProps> = ({ onCl
               placeholder="e.g. Card Template"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-[#333333]"
+              className="w-full bg-meevo-surface-4 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-meevo-border"
             />
           </div>
           

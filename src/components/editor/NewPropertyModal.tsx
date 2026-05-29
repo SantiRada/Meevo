@@ -21,8 +21,14 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
   const [activeColorPicker, setActiveColorPicker] = useState<{x: number, y: number} | null>(null);
   const types: TilePropertyType[] = ['Number', 'Text', 'List', 'Color'];
 
+  const [error, setError] = useState('');
+  
   const handleSave = () => {
-    if (!name.trim()) return;
+    if (!name.trim()) {
+      setError('Name is required');
+      return;
+    }
+
     
     const newProp: TileProperty = {
       id: editProperty ? editProperty.id : Date.now().toString(),
@@ -43,24 +49,25 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-[#0C0C0E] border border-[#CCCCCC]/10 rounded-lg shadow-2xl w-[400px] flex flex-col">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="bg-meevo-surface-6 border border-meevo-border rounded-lg shadow-2xl w-[400px] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#CCCCCC]/10 rounded-t-lg">
+        <div className="flex items-center justify-between p-6 border-b border-meevo-border rounded-t-lg">
           <h2 className="text-lg font-medium text-meevo-text-primary">
             {editProperty ? 'Edit Property' : 'New Property'}
           </h2>
           <button 
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-md border border-[#333333] hover:bg-[#1A1A1D] text-meevo-text-primary transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-md border border-meevo-border hover:bg-meevo-surface-2 text-meevo-text-primary transition-colors"
           >
             <Dismiss20Regular />
           </button>
         </div>
 
         {/* Content */}
+        {error && <div className="mx-6 mt-6 p-3 bg-red-500/20 text-red-500 text-sm rounded-md border border-red-500/50">{error}</div>}
         <div className="p-6">
-          <div className="flex items-center gap-3 bg-[#131F15] rounded-md px-4 py-3 mb-6">
+          <div className="flex items-center gap-3 bg-meevo-selector-green rounded-md px-4 py-3 mb-6">
             <div 
               className="w-4 h-4 rounded-md shrink-0" 
               style={{ backgroundColor: variable.color }}
@@ -77,7 +84,7 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
               placeholder="Text example"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-[#333333]"
+              className="w-full bg-meevo-surface-4 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-meevo-border"
             />
           </div>
 
@@ -86,7 +93,7 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
               Type
             </label>
             <div 
-              className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 min-h-[38px] flex items-center justify-between cursor-pointer border border-[#333333]"
+              className="w-full bg-meevo-surface-4 rounded-md px-3 py-2 min-h-[38px] flex items-center justify-between cursor-pointer border border-meevo-border"
               onClick={() => setIsTypeDropdownOpen(!isTypeDropdownOpen)}
             >
               <span className="text-sm text-meevo-text-primary">{type}</span>
@@ -94,7 +101,7 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
             </div>
 
             {isTypeDropdownOpen && (
-              <div className="absolute top-[60px] left-0 w-full bg-[#1A1A1D] border border-[#CCCCCC]/10 rounded-sm shadow-xl z-20 py-2">
+              <div className="absolute top-[60px] left-0 w-full bg-meevo-surface-2 border border-meevo-border rounded-sm shadow-xl z-20 py-2">
                 {types.map(t => (
                   <button 
                     key={t}
@@ -102,7 +109,7 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
                       setType(t);
                       setIsTypeDropdownOpen(false);
                     }}
-                    className="w-full text-left px-4 py-2 text-sm text-meevo-text-primary hover:bg-[#070709] transition-colors"
+                    className="w-full text-left px-4 py-2 text-sm text-meevo-text-primary hover:bg-meevo-surface-2 transition-colors"
                   >
                     {t}
                   </button>
@@ -122,7 +129,7 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
                   placeholder="$"
                   value={prefix}
                   onChange={(e) => setPrefix(e.target.value)}
-                  className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-[#333333] text-center"
+                  className="w-full bg-meevo-surface-4 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-meevo-border text-center"
                 />
               </div>
               <div className="col-span-3">
@@ -134,7 +141,7 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
                   placeholder="123"
                   value={defaultValue}
                   onChange={(e) => setDefaultValue(e.target.value)}
-                  className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-[#333333]"
+                  className="w-full bg-meevo-surface-4 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-meevo-border"
                 />
               </div>
             </div>
@@ -150,7 +157,7 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
                 placeholder="Value..."
                 value={defaultValue}
                 onChange={(e) => setDefaultValue(e.target.value)}
-                className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-[#333333]"
+                className="w-full bg-meevo-surface-4 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-meevo-border"
               />
             </div>
           )}
@@ -160,7 +167,7 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
               <label className="block text-xs font-bold text-meevo-text-secondary tracking-wider mb-2 uppercase">
                 Default Color
               </label>
-              <div className="flex items-center gap-3 bg-[#1A1A1D] rounded-md px-2 py-1.5 focus-within:ring-1 focus-within:ring-meevo-purple border border-[#333333]">
+              <div className="flex items-center gap-3 bg-meevo-surface-2 rounded-md px-2 py-1.5 focus-within:ring-1 focus-within:ring-meevo-purple border border-meevo-border">
                 <div 
                   className="w-5 h-5 rounded-sm border border-[#555] shrink-0 cursor-pointer" 
                   style={{ backgroundColor: defaultValue || '#ffffff' }}
@@ -200,7 +207,7 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
                 placeholder="Option 1, Option 2, Option 3"
                 value={listOptions}
                 onChange={(e) => setListOptions(e.target.value)}
-                className="w-full bg-[#1A1A1D] rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-[#333333]"
+                className="w-full bg-meevo-surface-4 rounded-md px-3 py-2 text-sm text-meevo-text-primary outline-none focus:ring-1 focus:ring-meevo-purple border border-meevo-border"
               />
             </div>
           )}
@@ -208,7 +215,7 @@ export const NewPropertyModal: React.FC<NewPropertyModalProps> = ({ variable, ed
           <div className="flex justify-end mt-4">
             <button 
               onClick={handleSave}
-              className="bg-white text-black font-medium py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+              className="bg-meevo-text-primary text-meevo-surface-0 font-medium py-2 px-4 rounded-md hover:opacity-90 transition-colors"
             >
               {editProperty ? 'Save Changes' : 'Create Property'}
             </button>

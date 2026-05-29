@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { EditorHeader } from '../components/editor/EditorHeader';
+import { SettingsModal } from '../components/editor/SettingsModal';
+import { ConfirmModal } from '../components/ui/ConfirmModal';
+import { SubTabsNav } from '../components/ui/SubTabsNav';
 import { Sidebar } from '../components/editor/Sidebar';
 import { ComponentsSidebar } from '../components/editor/ComponentsSidebar';
 import { BoardSidebar } from '../components/editor/BoardSidebar';
@@ -11,11 +14,20 @@ import { TileDetailSidebar } from '../components/editor/TileDetailSidebar';
 import { LayersSidebar } from '../components/editor/LayersSidebar';
 import { LayerDetailSidebar } from '../components/editor/LayerDetailSidebar';
 import { Workspace } from '../components/editor/Workspace';
+import { DicesSidebar } from '../components/editor/DicesSidebar';
+import { DiceDetailSidebar } from '../components/editor/DiceDetailSidebar';
+import { DicesWorkspace } from '../components/editor/DicesWorkspace';
+import { DecksSidebar } from '../components/editor/DecksSidebar';
+import { CardsSidebar } from '../components/editor/CardsSidebar';
+import { CardDetailSidebar } from '../components/editor/CardDetailSidebar';
+import { CardsWorkspace } from '../components/editor/CardsWorkspace';
 import { useNotification } from '../contexts/NotificationContext';
-import type { BoardConfig, BoardTileVariable, BoardTileData, LayerData, BoardTileComponent } from '../services/storage/types';
+import type { BoardConfig, BoardTileVariable, BoardTileData, LayerData, BoardTileComponent, DiceData, CardDeckData, CanvasSettings } from '../services/storage/types';
 import type { DesignTool } from '../components/editor/DesignToolbar';
 
 import { storage } from '../services/storage';
+import { ContextMenu } from '../components/ui/ContextMenu';
+import { useContextMenu } from '../contexts/ContextMenuContext';
 
 export type ComponentType = 'Board' | 'Cards' | 'Dices' | 'Tokens' | 'Rules' | 'Manual';
 export type BoardSubTab = 'Table' | 'Type Board' | 'Tiles' | 'Design';
@@ -24,6 +36,7 @@ export const Editor: React.FC = () => {
   const { name } = useParams<{ name: string }>();
   const navigate = useNavigate();
   const { addNotification } = useNotification();
+  const { openContextMenu } = useContextMenu();
   
   // Settings State
   const [activeComponents, setActiveComponents] = useState<ComponentType[]>([]);
@@ -32,6 +45,39 @@ export const Editor: React.FC = () => {
   const [boardVariables, setBoardVariables] = useState<BoardTileVariable[]>([]);
   const [boardTilesData, setBoardTilesData] = useState<Record<number, BoardTileData>>({});
   const [boardTileComponents, setBoardTileComponents] = useState<BoardTileComponent[]>([]);
+  const [boardDicesData, setBoardDicesData] = useState<Record<string, DiceData>>({});
+  const [selectedDiceId, setSelectedDiceId] = useState<string | null>(null);
+  const [diceEditMode, setDiceEditMode] = useState<'Global' | 'Individual'>('Global');
+  const [diceSelectedFace, setDiceSelectedFace] = useState<number>(1);
+
+  // Canvas Settings State
+  const [canvasSettings, setCanvasSettings] = useState<CanvasSettings>(() => {
+    const saved = localStorage.getItem('meevo_canvas_settings');
+    return saved ? JSON.parse(saved) : { fill: '', snapToGrid: true, viewGrid: true };
+  });
+
+  useEffect(() => {
+    localStorage.setItem('meevo_canvas_settings', JSON.stringify(canvasSettings));
+  }, [canvasSettings]);
+
+  React.useEffect(() => {
+    const handleThemeChange = () => {
+      setCanvasSettings(prev => {
+        if (prev?.fill) {
+          return { ...prev, fill: '' };
+        }
+        return prev;
+      });
+    };
+    window.addEventListener('theme-changed', handleThemeChange);
+    return () => window.removeEventListener('theme-changed', handleThemeChange);
+  }, []);
+
+  // Cards State
+  const [boardDecksData, setBoardDecksData] = useState<Record<string, CardDeckData>>({});
+  const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [cardsSubTab, setCardsSubTab] = useState<'Decks' | 'Cards' | 'Layers'>('Decks');
   
   // History State for Tiles Data
   const [history, setHistory] = useState<Record<number, BoardTileData>[]>([]);
@@ -45,6 +91,29 @@ export const Editor: React.FC = () => {
   const [selectedTableLayerIds, setSelectedTableLayerIds] = useState<string[]>([]);
   const [activeDesignTool, setActiveDesignTool] = useState<DesignTool>('Cursor');
   const [autoSaveStatus, setAutoSaveStatus] = useState<'waiting' | 'loading' | 'saved'>('saved');
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isDeleteBoardModalOpen, setIsDeleteBoardModalOpen] = useState(false);
+  
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      openContextMenu(e.clientX, e.clientY, 'canvas');
+    };
+    window.addEventListener('contextmenu', handleContextMenu);
+    return () => window.removeEventListener('contextmenu', handleContextMenu);
+  }, [openContextMenu]);
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === '`' || e.key === 'Dead' || e.code === 'Backquote') {
+        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+        e.preventDefault();
+        setIsSettingsOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
 
   useEffect(() => {
     const loadDraft = async () => {
@@ -59,6 +128,8 @@ export const Editor: React.FC = () => {
           if (draft.boardVariables) setBoardVariables(draft.boardVariables);
           else if ((draft as any).boardProperties) setBoardVariables((draft as any).boardProperties); // migration
           if (draft.boardTileComponents) setBoardTileComponents(draft.boardTileComponents);
+          if (draft.boardDicesData) setBoardDicesData(draft.boardDicesData);
+          if (draft.boardDecksData) setBoardDecksData(draft.boardDecksData);
           if (draft.boardTilesData) {
             setBoardTilesData(draft.boardTilesData);
             setHistory([draft.boardTilesData]);
@@ -128,10 +199,13 @@ export const Editor: React.FC = () => {
         }
       } else if (e.shiftKey && (e.key === '1' || e.code === 'Digit1' || e.key === '!')) {
         if (activeTab === 'Board') setBoardSubTab('Table');
+        else if (activeTab === 'Cards') setCardsSubTab('Decks');
       } else if (e.shiftKey && (e.key === '2' || e.code === 'Digit2' || e.key === '@')) {
         if (activeTab === 'Board') setBoardSubTab('Type Board');
+        else if (activeTab === 'Cards' && selectedDeckId) setCardsSubTab('Cards');
       } else if (e.shiftKey && (e.key === '3' || e.code === 'Digit3' || e.key === '#')) {
         if (activeTab === 'Board') setBoardSubTab('Tiles');
+        else if (activeTab === 'Cards' && selectedCardId) setCardsSubTab('Layers');
       } else if (e.shiftKey && (e.key === '4' || e.code === 'Digit4' || e.key === '$')) {
         if (activeTab === 'Board') setBoardSubTab('Design');
       } else if (!e.shiftKey && e.key >= '1' && e.key <= '9') {
@@ -142,7 +216,10 @@ export const Editor: React.FC = () => {
         if (index >= 0 && index < tabs.length) {
           setActiveTab(tabs[index]);
         }
-      } else if (activeTab === 'Board' && boardSubTab === 'Design') {
+      } else if (
+        (activeTab === 'Board' && (boardSubTab === 'Design' || boardSubTab === 'Table')) ||
+        (activeTab === 'Cards')
+      ) {
         // Design shortcuts
         const key = e.key.toLowerCase();
         if (key === 'v') setActiveDesignTool('Cursor');
@@ -180,9 +257,32 @@ export const Editor: React.FC = () => {
       }
     };
 
+    const handleHistoryEvent = (e: Event) => {
+      const type = (e as CustomEvent).detail;
+      if (type === 'undo') {
+        if (historyIndex > 0) {
+          const prevData = history[historyIndex - 1];
+          setHistoryIndex(historyIndex - 1);
+          setBoardTilesData(prevData);
+          if (name) storage.updateDraft(name, { boardTilesData: prevData });
+        }
+      } else if (type === 'redo') {
+        if (historyIndex < history.length - 1) {
+          const nextData = history[historyIndex + 1];
+          setHistoryIndex(historyIndex + 1);
+          setBoardTilesData(nextData);
+          if (name) storage.updateDraft(name, { boardTilesData: nextData });
+        }
+      }
+    };
+    
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [history, historyIndex, name, selectedTileIds, boardTilesData, activeComponents]);
+    window.addEventListener('meevo-history', handleHistoryEvent);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('meevo-history', handleHistoryEvent);
+    };
+  }, [history, historyIndex, name, selectedTileIds, boardTilesData, activeComponents, activeTab, boardSubTab, selectedDeckId, selectedCardId]);
 
   const handleBack = () => {
     navigate('/');
@@ -266,7 +366,9 @@ export const Editor: React.FC = () => {
       const success = await storage.updateDraft(name, { 
         boardVariables: newVars,
         boardTilesData: newData,
-        boardTileComponents: boardTileComponents
+        boardTileComponents: boardTileComponents,
+        boardDicesData: boardDicesData,
+        boardDecksData: boardDecksData
       });
       if (success) {
         setAutoSaveStatus('saved');
@@ -275,6 +377,59 @@ export const Editor: React.FC = () => {
       }
     }
   };
+
+  const handleUpdateDicesData = async (newDicesData: Record<string, DiceData>) => {
+    setBoardDicesData(newDicesData);
+    if (name) {
+      setAutoSaveStatus('loading');
+      const success = await storage.updateDraft(name, { boardDicesData: newDicesData });
+      if (success) setAutoSaveStatus('saved');
+      else setAutoSaveStatus('waiting');
+    }
+  };
+
+  const handleCreateDice = (dice: DiceData) => {
+    const newData = { ...boardDicesData, [dice.id]: dice };
+    handleUpdateDicesData(newData);
+    setSelectedDiceId(dice.id);
+  };
+
+  const handleUpdateDecksData = async (newDecksData: Record<string, CardDeckData>, silent?: boolean) => {
+    setBoardDecksData(newDecksData);
+    if (name && !silent) {
+      setAutoSaveStatus('loading');
+      const success = await storage.updateDraft(name, { boardDecksData: newDecksData });
+      if (success) setAutoSaveStatus('saved');
+      else setAutoSaveStatus('waiting');
+    }
+  };
+
+  const handleUpdateDice = (diceId: string, updates: Partial<DiceData>) => {
+    const newData = { ...boardDicesData };
+    if (newData[diceId]) {
+      newData[diceId] = { ...newData[diceId], ...updates };
+      handleUpdateDicesData(newData);
+    }
+  };
+
+  const handleDeleteDice = (diceId: string) => {
+    const newData = { ...boardDicesData };
+    delete newData[diceId];
+    handleUpdateDicesData(newData);
+    if (selectedDiceId === diceId) setSelectedDiceId(null);
+  };
+
+  const handleDuplicateDice = (diceId: string) => {
+    const dice = boardDicesData[diceId];
+    if (dice) {
+      const newId = Date.now().toString();
+      const newDice = { ...dice, id: newId, name: `${dice.name} (Copy)` };
+      const newData = { ...boardDicesData, [newId]: newDice };
+      handleUpdateDicesData(newData);
+      setSelectedDiceId(newId);
+    }
+  };
+
 
   const saveUserAction = (newData: Record<number, BoardTileData>, newComponents?: BoardTileComponent[]) => {
     const newHistory = history.slice(0, historyIndex + 1);
@@ -425,7 +580,41 @@ export const Editor: React.FC = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-meevo-bg text-meevo-text-primary overflow-hidden">
+    <div 
+      className="h-screen w-screen flex flex-col bg-meevo-bg text-meevo-text-primary overflow-hidden"
+      
+    >
+      <ContextMenu 
+        activeComponents={activeComponents}
+        activeTab={activeTab} setActiveTab={setActiveTab}
+        boardSubTab={boardSubTab} setBoardSubTab={setBoardSubTab}
+        cardsSubTab={cardsSubTab} setCardsSubTab={setCardsSubTab}
+        activeDesignTool={activeDesignTool} setActiveDesignTool={setActiveDesignTool}
+      />
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+        boardConfig={boardConfig} 
+        onUpdateBoardConfig={handleSaveBoard} 
+      />
+      <ConfirmModal
+        isOpen={isDeleteBoardModalOpen}
+        onClose={() => setIsDeleteBoardModalOpen(false)}
+        onConfirm={() => {
+          const newBoardConfig = boardConfig?.tableConfig ? { tableConfig: boardConfig.tableConfig } as any : undefined;
+          setBoardConfig(newBoardConfig);
+          setBoardTilesData({});
+          setBoardVariables([]);
+          setBoardTileComponents([]);
+          if (name) storage.updateDraft(name, { boardConfig: newBoardConfig || null, tilesData: {}, variables: [], boardTileComponents: [] });
+          setIsDeleteBoardModalOpen(false);
+        }}
+        title="Delete Board"
+        message="Are you sure you want to delete the board? This will remove all tiles and board configurations, but the Table will remain."
+        confirmText="Delete Board"
+        cancelText="Cancel"
+        danger={true}
+      />
       <EditorHeader 
         draftName={name || 'Untitled'} 
         onBack={handleBack} 
@@ -433,6 +622,7 @@ export const Editor: React.FC = () => {
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         autoSaveStatus={autoSaveStatus}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
       
       <div className="flex-1 flex overflow-hidden">
@@ -454,7 +644,9 @@ export const Editor: React.FC = () => {
               onSave={handleSaveBoard}
               selectedLayerIds={selectedTableLayerIds}
               onSelectLayer={(id, multi) => {
-                if (multi) {
+                if (!id && !multi) {
+                  setSelectedTableLayerIds([]);
+                } else if (multi) {
                   setSelectedTableLayerIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
                 } else {
                   setSelectedTableLayerIds([id]);
@@ -467,6 +659,7 @@ export const Editor: React.FC = () => {
             <BoardSidebar 
               initialConfig={boardConfig}
               onSave={handleSaveBoard}
+              onDeleteBoard={() => setIsDeleteBoardModalOpen(true)}
             />
           )}
 
@@ -490,13 +683,7 @@ export const Editor: React.FC = () => {
               selectedTileIds={selectedTileIds}
               boardTilesData={boardTilesData}
               selectedLayerIds={selectedLayerIds}
-              onSelectLayer={(id, multi) => {
-                if (multi) {
-                  setSelectedLayerIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
-                } else {
-                  setSelectedLayerIds([id]);
-                }
-              }}
+              onSelectLayer={(ids) => setSelectedLayerIds(ids)}
               onUpdateTile={(tileId, data) => {
                 const newData = { ...boardTilesData };
                 newData[tileId] = { ...newData[tileId], ...data };
@@ -508,21 +695,103 @@ export const Editor: React.FC = () => {
               }}
             />
           )}
+          {activeTab === 'Dices' && (
+            <DicesSidebar 
+              boardDicesData={boardDicesData}
+              selectedDiceId={selectedDiceId}
+              setSelectedDiceId={setSelectedDiceId}
+              onCreateDice={handleCreateDice}
+              onDeleteDice={handleDeleteDice}
+              onDuplicateDice={handleDuplicateDice}
+            />
+          )}
+          {activeTab === 'Cards' && (
+            <div className="flex flex-col h-full">
+              <div className="flex-1 flex flex-col overflow-hidden">
+                {cardsSubTab === 'Decks' && (
+                  <DecksSidebar 
+                    boardDecksData={boardDecksData}
+                    selectedDeckId={selectedDeckId}
+                    setSelectedDeckId={setSelectedDeckId}
+                    onUpdateDecks={handleUpdateDecksData}
+                    setCardsSubTab={setCardsSubTab}
+                  />
+                )}
+                {cardsSubTab === 'Cards' && (
+                  <CardsSidebar 
+                    boardDecksData={boardDecksData}
+                    selectedDeckId={selectedDeckId}
+                    selectedCardId={selectedCardId}
+                    setSelectedCardId={(id) => {
+                      setSelectedCardId(id);
+                      if (id) setCardsSubTab('Layers');
+                    }}
+                    onUpdateDecks={handleUpdateDecksData}
+                    setCardsSubTab={setCardsSubTab}
+                  />
+                )}
+                {cardsSubTab === 'Layers' && selectedCardId && selectedDeckId && boardDecksData[selectedDeckId]?.cards[selectedCardId] && (
+                  <LayersSidebar 
+                    isCardMode={true}
+                    layerSourceTitle={boardDecksData[selectedDeckId].cards[selectedCardId].name}
+                    onRenameSource={(newName) => {
+                      const deck = boardDecksData[selectedDeckId];
+                      const card = deck.cards[selectedCardId];
+                      handleUpdateDecksData({
+                        ...boardDecksData,
+                        [selectedDeckId]: {
+                          ...deck,
+                          cards: { ...deck.cards, [selectedCardId]: { ...card, name: newName } }
+                        }
+                      });
+                    }}
+                    selectedTileIds={[parseInt(selectedCardId)]} 
+                    boardTilesData={{ [parseInt(selectedCardId)]: boardDecksData[selectedDeckId].cards[selectedCardId] as any }} // Dummy adapting
+                    selectedLayerIds={selectedLayerIds}
+                    onSelectLayer={(ids) => setSelectedLayerIds(ids)}
+                    onUpdateTile={(tileId, data) => {
+                      // We handle this inside LayerDetailSidebar. If LayersSidebar reorders layers:
+                      if (data.layers) {
+                        const deck = boardDecksData[selectedDeckId];
+                        const card = deck.cards[selectedCardId];
+                        handleUpdateDecksData({
+                          ...boardDecksData,
+                          [selectedDeckId]: {
+                            ...deck,
+                            cards: { ...deck.cards, [selectedCardId]: { ...card, layers: data.layers } }
+                          }
+                        });
+                      }
+                    }}
+                    boardTileComponents={[]}
+                    onUpdateComponents={() => {}}
+                  />
+                )}
+              </div>
+            </div>
+          )}
         </Sidebar>
         
         <main className="flex-1 relative flex">
           <div className="flex-1 relative">
+          {activeTab === 'Board' || activeTab === 'Components' ? (
                 <Workspace 
                   activeTab={activeTab} 
+                  canvasSettings={canvasSettings}
                   boardConfig={boardConfig || undefined}
                   boardSubTab={boardSubTab}
-                  setBoardSubTab={setBoardSubTab}
+                  setBoardSubTab={(tab) => setBoardSubTab(tab as BoardSubTab)}
                   selectedTileIds={selectedTileIds}
                   setSelectedTileIds={setSelectedTileIds}
                   boardVariables={boardVariables}
                   boardTilesData={boardTilesData}
+                  boardDicesData={boardDicesData}
+                  boardDecksData={boardDecksData}
+                  onUpdateDecksData={handleUpdateDecksData}
+                  setActiveTab={(tab) => setActiveTab(tab as ComponentType)}
+                  setSelectedDeckId={setSelectedDeckId}
                   activeDesignTool={activeDesignTool}
-                  setActiveDesignTool={setActiveDesignTool}
+                  setActiveDesignTool={(tool) => setActiveDesignTool(tool as DesignTool)}
                   selectedLayerIds={selectedLayerIds}
                   setSelectedLayerIds={setSelectedLayerIds}
                   selectedTableLayerIds={selectedTableLayerIds}
@@ -536,12 +805,62 @@ export const Editor: React.FC = () => {
                     const e = new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true });
                     window.dispatchEvent(e);
                   }}
+                  
                 />
+              ) : activeTab === 'Dices' ? (
+                <DicesWorkspace 
+                  canvasSettings={canvasSettings}
+                  boardDicesData={boardDicesData}
+                  selectedDiceId={selectedDiceId}
+                  setSelectedDiceId={setSelectedDiceId}
+                  onDuplicateDice={handleDuplicateDice}
+                  onDiceFaceDoubleClick={(diceId, faceIndex) => {
+                    setSelectedDiceId(diceId);
+                    setDiceEditMode('Individual');
+                    setDiceSelectedFace(faceIndex);
+                  }}
+                />
+              ) : activeTab === 'Cards' ? (
+                <div className="flex flex-col h-full w-full">
+                  <div className="flex-1 relative overflow-hidden">
+                    <CardsWorkspace
+                      canvasSettings={canvasSettings}
+                      boardDecksData={boardDecksData}
+                      selectedDeckId={selectedDeckId}
+                      setSelectedDeckId={setSelectedDeckId}
+                      selectedCardId={selectedCardId}
+                      setSelectedCardId={setSelectedCardId}
+                      setCardsSubTab={setCardsSubTab}
+                      onUpdateDecks={handleUpdateDecksData}
+                      activeDesignTool={activeDesignTool}
+                      setActiveDesignTool={(tool) => setActiveDesignTool(tool as DesignTool)}
+                      selectedLayerIds={selectedLayerIds}
+                      setSelectedLayerIds={setSelectedLayerIds}
+                      boardConfig={boardConfig}
+                      onUpdateBoardConfig={handleSaveBoard}
+                      
+                    />
+                  </div>
+                  <SubTabsNav
+                    tabs={[
+                      { id: 'Decks', label: 'Decks' },
+                      { id: 'Cards', label: 'Cards', disabled: !selectedDeckId },
+                      { id: 'Layers', label: 'Layers', disabled: !selectedCardId }
+                    ]}
+                    activeTabId={cardsSubTab}
+                    onChange={(id) => {
+                      if (id === 'Cards' && selectedDeckId) setCardsSubTab('Cards');
+                      else if (id === 'Layers' && selectedCardId) setCardsSubTab('Layers');
+                      else if (id === 'Decks') setCardsSubTab('Decks');
+                    }}
+                  />
+                </div>
+              ) : null}
           </div>
 
           {/* Right Sidebar */}
           {activeTab === 'Board' && boardSubTab === 'Tiles' && selectedTileIds.length === 0 && activeVariableId && (
-            <div className="w-80 h-full border-l border-[#CCCCCC]/10 flex flex-col z-10 relative bg-meevo-panel">
+            <div className="w-80 h-full border-l border-meevo-border flex flex-col z-30 relative bg-meevo-surface-1 shrink-0">
               <PropertiesSidebar 
                 variable={boardVariables.find(v => v.id === activeVariableId)!}
                 onUpdateVariable={(updated) => {
@@ -552,7 +871,7 @@ export const Editor: React.FC = () => {
             </div>
           )}
           {activeTab === 'Board' && boardSubTab === 'Tiles' && selectedTileIds.length > 0 && (
-            <div className="w-80 h-full border-l border-[#CCCCCC]/10 flex flex-col z-10 relative bg-meevo-panel">
+            <div className="w-80 h-full border-l border-meevo-border flex flex-col z-30 relative bg-meevo-surface-1 shrink-0">
               <TileDetailSidebar 
                 selectedTileIds={selectedTileIds}
                 boardTilesData={boardTilesData}
@@ -563,28 +882,46 @@ export const Editor: React.FC = () => {
               />
             </div>
           )}
-          {activeTab === 'Board' && boardSubTab === 'Design' && selectedTileIds.length === 1 && (
-            <div className="w-80 h-full border-l border-[#CCCCCC]/10 flex flex-col z-10 relative bg-meevo-panel">
-              <LayerDetailSidebar 
-                selectedTileIds={selectedTileIds}
-                boardTilesData={boardTilesData}
-                selectedLayerIds={selectedLayerIds}
-                onUpdateLayer={handleUpdateLayer}
-                onUpdateTile={handleUpdateTile}
-                boardConfig={boardConfig || undefined}
-                boardVariables={boardVariables}
-              />
-            </div>
-          )}
+          {activeTab === 'Board' && boardSubTab === 'Design' && selectedTileIds.length <= 1 && (
+              <div className="w-80 h-full border-l border-meevo-border flex flex-col z-30 relative bg-meevo-surface-1 shrink-0">
+                <LayerDetailSidebar 
+                  selectedTileIds={selectedTileIds}
+                  boardTilesData={boardTilesData}
+                  selectedLayerIds={selectedLayerIds}
+                  onUpdateLayer={handleUpdateLayer}
+                  onUpdateTile={handleUpdateTile}
+                  boardConfig={boardConfig || undefined}
+                  boardVariables={boardVariables}
+                  canvasSettings={canvasSettings}
+                  setCanvasSettings={setCanvasSettings}
+                />
+              </div>
+            )}
+            {((activeTab === 'Components') ||
+              (activeTab === 'Board' && boardSubTab === 'Type Board') ||
+              (activeTab === 'Board' && boardSubTab === 'Table' && selectedTableLayerIds.length === 0) ||
+              (activeTab === 'Board' && boardSubTab === 'Tiles' && selectedTileIds.length === 0 && !activeVariableId)) && (
+              <div className="w-80 h-full border-l border-meevo-border flex flex-col z-30 relative bg-meevo-surface-1 shrink-0">
+                <LayerDetailSidebar 
+                  selectedTileIds={[]}
+                  boardTilesData={{}}
+                  selectedLayerIds={[]}
+                  onUpdateLayer={() => {}}
+                  onUpdateTile={() => {}}
+                  canvasSettings={canvasSettings}
+                  setCanvasSettings={setCanvasSettings}
+                />
+              </div>
+            )}
           {activeTab === 'Board' && boardSubTab === 'Table' && selectedTableLayerIds.length === 1 && (
-            <div className="w-80 h-full border-l border-[#CCCCCC]/10 flex flex-col z-10 relative bg-meevo-panel">
+            <div className="w-80 h-full border-l border-meevo-border flex flex-col z-30 relative bg-meevo-surface-1 shrink-0">
               <LayerDetailSidebar 
                 selectedTileIds={[]}
                 boardTilesData={{}}
                 selectedLayerIds={selectedTableLayerIds}
-                onUpdateLayer={(tId, lId, data) => {
+                onUpdateLayer={(_, lId, data) => {
                   if (!boardConfig) return;
-                  const newLayers = (boardConfig.tableConfig?.layers || []).map(l => l.id === lId ? { ...l, ...data } : l);
+                  const newLayers = (boardConfig.tableConfig?.layers || []).map((l: LayerData) => l.id === lId ? { ...l, ...data } : l);
                   handleSaveBoard({
                     ...boardConfig,
                     tableConfig: { ...boardConfig.tableConfig!, layers: newLayers }
@@ -594,6 +931,78 @@ export const Editor: React.FC = () => {
                 boardConfig={boardConfig || undefined}
                 boardVariables={boardVariables}
                 isTableMode={true}
+                
+                
+              />
+            </div>
+          )}
+          {activeTab === 'Dices' && selectedDiceId && boardDicesData[selectedDiceId] && (
+            <div className="w-80 h-full border-l border-meevo-border flex flex-col z-30 relative bg-meevo-surface-1 shrink-0">
+              <DiceDetailSidebar 
+                dice={boardDicesData[selectedDiceId]}
+                onUpdateDice={handleUpdateDice}
+                editMode={diceEditMode}
+                setEditMode={setDiceEditMode}
+                selectedFace={diceSelectedFace}
+                setSelectedFace={setDiceSelectedFace}
+              />
+            </div>
+          )}
+          {activeTab === 'Cards' && selectedCardId && selectedDeckId && selectedLayerIds.length === 1 && (
+            <div className="w-80 h-full border-l border-meevo-border flex flex-col z-30 relative bg-meevo-surface-1 shrink-0">
+              <LayerDetailSidebar 
+                selectedTileIds={[parseInt(selectedCardId) || 99999]}
+                boardTilesData={{
+                  [parseInt(selectedCardId) || 99999]: boardDecksData[selectedDeckId].cards[selectedCardId] as any
+                }}
+                selectedLayerIds={selectedLayerIds} isCardMode={true}
+                onUpdateLayer={(_, lId, data) => {
+                  const deck = boardDecksData[selectedDeckId];
+                  if (!deck) return;
+                  const card = deck.cards[selectedCardId];
+                  if (!card) return;
+                  const newLayers = (card.layers || []).map((l: LayerData) => l.id === lId ? { ...l, ...data } : l);
+                  handleUpdateDecksData({
+                    ...boardDecksData,
+                    [selectedDeckId]: { ...deck, cards: { ...deck.cards, [selectedCardId]: { ...card, layers: newLayers } } }
+                  });
+                }}
+                onUpdateTile={() => {}}
+                boardVariables={boardVariables}
+                isTableMode={true} // Using isTableMode to avoid board logic
+                cardModeLayerSource={boardDecksData[selectedDeckId]?.cards[selectedCardId]?.layers || []}
+                
+                
+              />
+            </div>
+          )}
+          {activeTab === 'Cards' && selectedCardId && selectedDeckId && selectedLayerIds.length === 0 && (
+            <CardDetailSidebar 
+              cardData={boardDecksData[selectedDeckId]?.cards[selectedCardId]}
+              
+              
+              onUpdateCard={(data) => {
+                const deck = boardDecksData[selectedDeckId];
+                if (!deck) return;
+                const card = deck.cards[selectedCardId];
+                handleUpdateDecksData({
+                  ...boardDecksData,
+                  [selectedDeckId]: { ...deck, cards: { ...deck.cards, [selectedCardId]: { ...card, ...data } } }
+                });
+              }}
+            />
+          )}
+          {activeTab === 'Cards' && !selectedCardId && (
+            <div className="w-80 h-full border-l border-meevo-border flex flex-col z-30 relative bg-meevo-surface-1 shrink-0">
+              <LayerDetailSidebar 
+                selectedTileIds={[]}
+                boardTilesData={{}}
+                selectedLayerIds={[]}
+                onUpdateLayer={() => {}}
+                onUpdateTile={() => {}}
+                canvasSettings={canvasSettings}
+                setCanvasSettings={setCanvasSettings}
+                isCardMode={true}
               />
             </div>
           )}
@@ -602,3 +1011,6 @@ export const Editor: React.FC = () => {
     </div>
   );
 };
+
+
+

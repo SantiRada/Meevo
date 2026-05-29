@@ -20,6 +20,7 @@ interface EditorHeaderProps {
   activeTab: string;
   onSelectTab: (tab: string) => void;
   autoSaveStatus: 'waiting' | 'loading' | 'saved';
+  onOpenSettings?: () => void;
 }
 
 const getIconForComponent = (comp: ComponentType) => {
@@ -33,11 +34,12 @@ const getIconForComponent = (comp: ComponentType) => {
   }
 };
 
-export const EditorHeader: React.FC<EditorHeaderProps> = ({ draftName, onBack, activeComponents, activeTab, onSelectTab, autoSaveStatus }) => {
+import { Settings24Regular } from '@fluentui/react-icons';
+export const EditorHeader: React.FC<EditorHeaderProps> = ({ draftName, onBack, activeComponents, activeTab, onSelectTab, autoSaveStatus, onOpenSettings }) => {
   const sortedComponents = [...activeComponents].sort();
 
   return (
-    <header className="py-5 border-b border-[#CCCCCC]/10 grid grid-cols-3 items-center px-8 bg-meevo-bg shrink-0">
+    <header className="py-5 border-b border-meevo-border grid grid-cols-3 items-center px-8 bg-meevo-surface-1 shrink-0">
       {/* Left Area: Back & Title */}
       <div className="flex items-center gap-4 justify-self-start">
         <button 
@@ -55,13 +57,14 @@ export const EditorHeader: React.FC<EditorHeaderProps> = ({ draftName, onBack, a
       </div>
 
       {/* Center Area: Tabs */}
-      <div className="flex items-center gap-1 overflow-x-auto bg-[#070709] border border-[#CCCCCC]/10 rounded-lg p-1.5 justify-self-center">
+      <div className="flex items-center gap-2 justify-self-center">
+        <div className="flex items-center gap-1 overflow-x-auto bg-meevo-surface-0 border border-meevo-border rounded-lg p-1.5">
         <button 
           onClick={() => onSelectTab('Components')}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
             activeTab === 'Components' 
-              ? 'bg-[#1A1A1D] text-meevo-text-primary' 
-              : 'text-meevo-text-secondary hover:text-meevo-text-primary hover:bg-[#1A1A1D]/50'
+              ? 'bg-meevo-surface-2 text-meevo-text-primary' 
+              : 'text-meevo-text-secondary hover:text-meevo-text-primary hover:bg-meevo-surface-2/50'
           }`}
         >
           <AppsList24Regular fontSize={14} />
@@ -74,14 +77,25 @@ export const EditorHeader: React.FC<EditorHeaderProps> = ({ draftName, onBack, a
             onClick={() => onSelectTab(comp)}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
               activeTab === comp 
-                ? 'bg-[#1A1A1D] text-meevo-text-primary' 
-                : 'text-meevo-text-secondary hover:text-meevo-text-primary hover:bg-[#1A1A1D]/50'
+                ? 'bg-meevo-surface-2 text-meevo-text-primary' 
+                : 'text-meevo-text-secondary hover:text-meevo-text-primary hover:bg-meevo-surface-2/50'
             }`}
           >
             {getIconForComponent(comp)}
             {comp}
           </button>
         ))}
+        </div>
+        <button 
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (onOpenSettings) onOpenSettings();
+          }}
+          className="flex items-center justify-center p-[12px] bg-meevo-surface-0 border border-meevo-border rounded-lg text-meevo-text-primary hover:bg-meevo-surface-2/50 transition-colors"
+        >
+          <Settings24Regular fontSize={20} />
+        </button>
       </div>
 
       {/* Right Area: Playtest */}
@@ -99,3 +113,9 @@ export const EditorHeader: React.FC<EditorHeaderProps> = ({ draftName, onBack, a
     </header>
   );
 };
+
+
+
+
+
+

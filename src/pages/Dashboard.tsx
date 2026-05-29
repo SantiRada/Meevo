@@ -6,11 +6,13 @@ import { Add16Regular } from '@fluentui/react-icons';
 import { storage } from '../services/storage';
 import type { DraftMetadata } from '../services/storage/types';
 import { NewDraftModal } from '../components/NewDraftModal';
+import { ConfirmModal } from '../components/ui/ConfirmModal';
 
 export const Dashboard: React.FC = () => {
   const [drafts, setDrafts] = useState<DraftMetadata[]>([]);
   const [isReady, setIsReady] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [draftToDelete, setDraftToDelete] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const loadDrafts = async () => {
@@ -45,14 +47,19 @@ export const Dashboard: React.FC = () => {
     }
   };
 
-  const handleDeleteDraft = async (name: string) => {
-    if (window.confirm(`Are you sure you want to delete ${name}? This will remove all files.`)) {
-      const success = await storage.deleteDraft(name);
+  const handleDeleteDraft = (name: string) => {
+    setDraftToDelete(name);
+  };
+
+  const confirmDeleteDraft = async () => {
+    if (draftToDelete) {
+      const success = await storage.deleteDraft(draftToDelete);
       if (success) {
         await loadDrafts();
       } else {
         alert("Failed to delete draft.");
       }
+      setDraftToDelete(null);
     }
   };
 
@@ -118,6 +125,16 @@ export const Dashboard: React.FC = () => {
           ))}
         </div>
       </main>
+
+      <ConfirmModal 
+        isOpen={!!draftToDelete}
+        onClose={() => setDraftToDelete(null)}
+        onConfirm={confirmDeleteDraft}
+        title="Delete Draft"
+        message={`Are you sure you want to delete ${draftToDelete}? This will remove all files.`}
+        confirmText="Delete"
+        danger={true}
+      />
 
       <NewDraftModal 
         isOpen={isModalOpen} 

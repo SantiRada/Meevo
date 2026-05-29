@@ -63,7 +63,7 @@ export const NotificationItem: React.FC<{ data: NotificationData }> = ({ data })
                   className={`px-3 py-1.5 rounded-sm text-xs font-medium transition-colors ${
                     action.primary 
                       ? 'bg-meevo-text-primary text-meevo-text-inverse hover:bg-meevo-text-secondary' 
-                      : 'bg-[#1A1A1D] text-meevo-text-primary border border-[#CCCCCC]/10 hover:bg-[#212124]'
+                      : 'bg-meevo-surface-2 text-meevo-text-primary border border-meevo-border hover:bg-[#212124]'
                   }`}
                 >
                   {action.label}
